@@ -4,6 +4,17 @@ import axios from 'axios'
 export default {
   async login(clientmsg) {
     let res = await axios.post('/api/client/user/login', clientmsg)
+    // console.log('rews', res)
     return res
+  },
+  // 获取二维码
+  async getCode() {
+    let res = await axios.get('/api/client/user/login')
+    return res
+  },
+  // 注册
+  async register(clientmsg) {
+    let res = await axios.post('/api/client/user/register', clientmsg)
+    console.log(res)
   },
 }

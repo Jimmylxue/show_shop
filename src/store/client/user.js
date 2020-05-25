@@ -20,6 +20,17 @@ export default {
       }
       return code
     },
+    // 获取图形验证码
+    async getCode() {
+      let res = await us.getCode()
+      // console.log('ook', res.data)
+      return res.data
+    },
+    async register({ commit }, clitenmsg) {
+      console.log(commit)
+      let res = await us.register(clitenmsg)
+      console.log(res)
+    },
   },
   getters: {},
 }

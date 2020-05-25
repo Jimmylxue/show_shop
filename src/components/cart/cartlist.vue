@@ -23,8 +23,8 @@
         <el-table-column label="小计" prop="money"></el-table-column>
         <el-table-column label="操作">
           <template>
-            <el-tag class="tag" type="danger">删除</el-tag>
-            <el-tag type="success">结算</el-tag>
+            <el-tag class="tag" @click="deleteone" type="danger">删除</el-tag>
+            <el-tag class="tag" type="success">结算</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -47,6 +47,11 @@
 
 <script>
 export default {
+  mounted() {
+    setTimeout(() => {
+      this.loading = !this.loading
+    }, 1500)
+  },
   data() {
     return {
       loading: true,
@@ -93,6 +98,25 @@ export default {
         this.selcount++
         this.allmoney += item.money
       })
+    },
+    deleteone() {
+      this.$confirm('您将在购物车中删除该商品, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }
@@ -105,6 +129,7 @@ export default {
 }
 .tag {
   margin-right: 10px;
+  cursor: pointer;
 }
 .heji {
   width: 100%;

@@ -19,6 +19,13 @@
               <el-input v-model="ruleForm.userpsd" placeholder="请输入登录密码"></el-input>
             </el-form-item>
           </el-form>
+          <div class="code">
+            <div class="fa fa-refresh reflash" @click="reflash"></div>
+            <input type="text" v-model="VerificationCode" placeholder="请输入验证码" />
+            <div class="img">
+              <img ref="imgs" width="100%" height="100%" src="/api//client/user/login" alt />
+            </div>
+          </div>
           <div class="cando">
             <a href="#" @click="toregisterpage">账号注册</a>
             <a href>密码找回</a>
@@ -41,7 +48,7 @@
           <el-form
             :model="registermsg"
             :rules="rules"
-            ref="ruleForm"
+            ref="registermsgs"
             status-icon
             label-width="100px"
             class="demo-ruleForm"
@@ -50,9 +57,9 @@
               class="item"
               label="请输入账号(Register Account)"
               label-width="auto"
-              prop="userid"
+              prop="userphone"
             >
-              <el-input v-model="registermsg.userid" placeholder="推荐手机号或邮箱"></el-input>
+              <el-input v-model="registermsg.userphone" placeholder="推荐手机号或邮箱"></el-input>
             </el-form-item>
             <el-form-item
               class="item"
@@ -93,15 +100,16 @@ export default {
   data() {
     return {
       checkstatus: false,
+      VerificationCode: '',
       ruleForm: {
         userid: '12345678',
         userpsd: '123456789'
       },
       registermsg: {
-        userid: '',
-        userpsd: '',
-        username: '',
-        imgsrc: ''
+        userphone: '19905076420',
+        userpsd: '123456789',
+        username: 'jack',
+        header: ''
       },
       rules: {
         userid: [
@@ -113,6 +121,15 @@ export default {
             trigger: 'blur'
           },
           { validator: '', trigger: 'blur' }
+        ],
+        userphone: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' },
+          {
+            min: 11,
+            max: 11,
+            message: '手机号格式不正确',
+            trigger: 'blur'
+          }
         ],
         userpsd: [
           { required: true, message: '请输入登录密码', trigger: 'blur' },
@@ -136,42 +153,53 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions(['login', 'getCode', 'register']),
     submitForm() {
       if (this.checkstatus === false) {
         this.$message.error('请先勾选用户须知手册')
         return
       }
+      if (this.VerificationCode === '') {
+        this.$message.error('请填写验证码')
+        return
+      }
       this.$refs.ruleForms.validate(valid => {
         if (valid) {
-          this.login(this.ruleForm)
-            .then(() => {
-              this.$message({
-                message: '恭喜你，登录成功',
-                type: 'success'
-              })
-              this.$router.push('/')
+          this.login({ form: this.ruleForm, code: this.VerificationCode })
+            .then(code => {
+              if (code === 0) {
+                this.$message({
+                  message: '恭喜你，登录成功',
+                  type: 'success'
+                })
+                this.$router.push('/')
+                return
+              }
             })
-            .catch(() => {
+            .catch(err => {
+              console.log(err.body)
               this.$message.error('账号或密码错误~')
             })
           // conrage.setItem('user', 'Jimmy')
         }
       })
     },
+    // 注册
     register() {
       if (this.checkstatus === false) {
         this.$message.error('请先勾选用户须知手册')
         return
       }
-      this.$refs.ruleForm.validate(valid => {
-        if (valid && this.registermsg.imgsrc !== '') {
-          this.$message({
-            message: '恭喜你，注册成功',
-            type: 'success'
-          })
+      this.$refs.registermsgs.validate(valid => {
+        if (valid && this.registermsg.header !== '') {
+          // console.log('hello')
+          this.register(this.registermsg)
+          // this.$message({
+          //   message: '恭喜你，注册成功',
+          //   type: 'success'
+          // })
         } else {
-          if (this.registermsg.imgsrc === '') {
+          if (this.registermsg.header === '') {
             this.$message.error('别忘记上传一张帅气的头像呢~')
             return
           }
@@ -200,11 +228,14 @@ export default {
         // console.log(imgFile)
         // console.log(Base64.decode(imgFile))
         const arr = imgFile.split(',')
-        this.registermsg.imgsrc = arr[1]
+        this.registermsg.header = arr[1]
         this.$refs.touxiang.src = e.target.result
         // console.log(imgFile)
         // console.log(imgsrc)
       }
+    },
+    reflash() {
+      this.$refs.imgs.src = `/api//client/user/login?time = ${Date.now()}`
     }
   }
 }
@@ -243,6 +274,34 @@ export default {
 
       .loginbtn {
         width: 100%;
+      }
+    }
+    .code {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      position: relative;
+      .reflash {
+        position: absolute;
+        right: 5px;
+        top: 10px;
+        color: #bbb;
+      }
+      input {
+        height: 40px;
+        margin-right: auto;
+        border: 1px solid #dcdfe6;
+        color: #606266;
+        padding-left: 15px;
+        outline: none;
+        border-radius: 4px;
+        // margin-top: 18px;
+        // position: relative;
+      }
+      .img {
+        width: 110px;
+        height: 60px;
+        // border: 1px solid #ccc;
       }
     }
     .cando {

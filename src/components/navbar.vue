@@ -5,7 +5,13 @@
       <div class="container">
         <ul class="links">
           <li>
-            <a href="/login">{{name}}</a>
+            <a href>{{name}}</a>
+          </li>
+          <li v-show="name===''?true:false">
+            <a href="/login">登录</a>
+          </li>
+          <li @click="centerDialogVisible = true" v-show="name===''?false:true">
+            <a href="javascript:void(0);">注销</a>
           </li>
           <li>
             <a href>个人中心</a>
@@ -20,7 +26,7 @@
       </div>
     </header>
     <!-- 搜素栏 -->
-    <div>
+    <div class="nav">
       <el-card class="search">
         <div class="container">
           <div class="logo">
@@ -74,11 +80,11 @@
     </div>
     <!-- 固定工具栏 -->
     <div class="toolbar">
-      <div>
+      <div @click="tomine">
         <i class="fa fa-user-o fa-2x"></i>
         <span>个人中心</span>
       </div>
-      <div>
+      <div @click="$router.push('/cart')">
         <i class="fa fa-cart-arrow-down fa-2x"></i>
         <span>购物车</span>
       </div>
@@ -96,6 +102,14 @@
         <span>人工客服</span>
       </div>
     </div>
+    <!-- 弹窗 -->
+    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
+      <span>确定要退出当前账号吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="logout">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -117,12 +131,36 @@ export default {
 
   data() {
     return {
+      // 弹窗
+      centerDialogVisible: false,
       name: ''
     }
   },
   mounted() {
     if (localStorage.getItem('user')) {
       this.name = localStorage.getItem('user')
+    }
+  },
+  methods: {
+    // 注销
+    logout() {
+      this.centerDialogVisible = false
+      this.$router.push('/login')
+      this.$message({
+        message: '已注销',
+        type: 'success'
+      })
+    },
+    // 个人中心
+    tomine() {
+      if (this.name === '') {
+        this.$message({
+          message: '您还未登录哦~请先登录。',
+          type: 'warning'
+        })
+        return
+      }
+      alert('个人中心')
     }
   }
 }
@@ -257,6 +295,7 @@ header {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position: relative;
       .inputs {
         width: 90%;
         height: 50px;
