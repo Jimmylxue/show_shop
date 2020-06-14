@@ -3,10 +3,14 @@ import us from '../../service/user'
 export default {
   state: {
     isLogin: localStorage.getItem('token') ? true : false,
+    registerid: '',
   },
   mutations: {
     setLoginState(state, value) {
       state.isLogin = value
+    },
+    setRegisertId(state, value) {
+      state.registerid = value
     },
   },
   actions: {
@@ -27,9 +31,12 @@ export default {
       return res.data
     },
     async register({ commit }, clitenmsg) {
-      console.log(commit)
+      // console.log(commit)
       let res = await us.register(clitenmsg)
-      console.log(res)
+      console.log('res', res)
+      let { code, registerid } = res.data
+      commit('setRegisertId', registerid)
+      return code
     },
   },
   getters: {},

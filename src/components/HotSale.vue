@@ -12,43 +12,23 @@
           <div>30</div>
         </div>
       </div>
-      <div class="hdgoods">
-        <div class="good">
+      <div ref="scr" class="hdgoods">
+        <div
+          v-for="(item,index) in allgoos"
+          :style="showcolor"
+          @click="Detail(item.goodid)"
+          :key="index"
+          class="good"
+        >
           <div class="imgs">
-            <img src="../assets/goods/01.jpg" width="100%" height="100%" alt />
+            <img :src="item.goodimg" width="100%" height="100%" alt />
           </div>
           <div class="msg">
-            <span>游戏本2019款 i7-9750H</span>
-            <span class="miaoshu">性能怪兽 信仰终极游戏体验</span>
+            <span>{{item.goodname}}</span>
+            <span class="miaoshu">item.gooddesc</span>
             <div>
-              <span>8999元</span>
-              <span>9499元</span>
-            </div>
-          </div>
-        </div>
-        <div class="good">
-          <div class="imgs">
-            <img src="../assets/goods/02.jpg" width="100%" height="100%" alt />
-          </div>
-          <div class="msg">
-            <span>小米手环4 NFC版 黑色</span>
-            <span class="miaoshu">大屏彩显 可刷公交、门禁</span>
-            <div>
-              <span>199元</span>
-              <span>229元</span>
-            </div>
-          </div>
-        </div>
-        <div class="good">
-          <div class="imgs">
-            <img src="../assets/goods/03.jpg" width="100%" height="100%" alt />
-          </div>
-          <div class="msg">
-            <span>小米真无线蓝牙耳机 Air2 白色</span>
-            <span class="miaoshu">智能真无线 轻松舒适戴</span>
-            <div>
-              <span>369元</span>
-              <span>399元</span>
+              <span>{{item.nowPrice}}元</span>
+              <span>{{item.price}}元</span>
             </div>
           </div>
         </div>
@@ -58,7 +38,70 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      count: 0,
+      allscroll: 0,
+      itemcount: 5,
+      allgoos: null,
+      colors: ['#2ecc71', '#3498db', '#e67e22', '#f1c40f', '#1abc9c']
+    }
+  },
+  computed: {
+    showcolor() {
+      let i = Math.ceil(Math.random() * 5)
+      return `2px solid green`
+    }
+  },
+  mounted() {
+    this.star()
+    setTimeout(() => {
+      this.allgoos = this.$store.state.good.allGoods.filter(item => {
+        if (item.tag === 'discount') {
+          this.itemcount++
+          return item.tag === 'discount'
+        }
+      })
+
+      // console.log(this.allgoos)
+    }, 500)
+  },
+  watch: {
+    count(newval) {
+      if (newval === 275) {
+        setTimeout(() => {
+          this.count = 0
+          this.star()
+        }, 3000)
+      }
+    }
+  },
+  methods: {
+    star() {
+      // setTimeout(() => {
+      //   let inter = setInterval(() => {
+      //     if (this.allgoos.length !== 0) {
+      //       // this.$refs.scr.scrollLeft += 1
+      //       this.allscroll++
+      //       if (this.allscroll >= (this.itemcount - 4) * 275) {
+      //         this.$refs.scr.scrollLeft = 0
+      //         this.count = 0
+      //         this.allscroll = 0
+      //       }
+      //       this.count++
+      //       if (this.count === 275) {
+      //         clearInterval(inter)
+      //       }
+      //     }
+      //   }, 0)
+      // }, 1000)
+    },
+    Detail(id) {
+      this.$router.push(`/good?id=${id}`)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -121,11 +164,16 @@ h2 {
     }
   }
   .hdgoods {
-    flex-grow: 1;
+    width: 100%;
+    // height: 360px;
     // background-color: #9b59b6;
-    display: flex;
-    flex-wrap: wrap;
+    display: -webkit-box;
+    // flex-wrap: wrap;
+    overflow-x: auto;
     // justify-content: space-between;
+    &::-webkit-scrollbar {
+      display: none;
+    }
     div {
       width: 260px;
       height: 360px;
@@ -137,9 +185,14 @@ h2 {
       justify-content: center;
       margin-right: 15px;
       overflow: hidden;
+      transition: all 0.5s ease-in-out;
       .imgs {
         width: 100%;
         height: 200px;
+        img {
+          width: 180px;
+          height: 180px;
+        }
       }
       .msg {
         width: 100%;

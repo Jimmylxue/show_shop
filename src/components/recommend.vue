@@ -5,11 +5,16 @@
       <span>为您推荐</span>
     </div>
     <div class="container">
-      <div class="good">
-        <img src="../assets/goods/recommend/01.jpg" alt />
-        <span>小米10 青春版</span>
+      <div
+        v-for="(item,index) in recommand"
+        @click="toDetail(item.goodid)"
+        :key="index"
+        class="good"
+      >
+        <img :src="item.goodimg" alt />
+        <span>{{item.goodname}}</span>
       </div>
-      <div class="good">
+      <!-- <div class="good">
         <img src="../assets/goods/recommend/02.jpg" alt />
         <span>HUAWEI MATE 30 5G</span>
       </div>
@@ -36,13 +41,31 @@
       <div class="good">
         <img src="../assets/goods/recommend/08.jpg" alt />
         <span>iPhone XR</span>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+import { mapActions, mapState } from 'vuex'
+export default {
+  data() {
+    return {}
+  },
+  async mounted() {
+    await this.getGoods('all')
+    // console.log('hello')
+  },
+  computed: {
+    ...mapState({ recommand: state => state.good.recommand })
+  },
+  methods: {
+    ...mapActions(['getGoods']),
+    toDetail(id) {
+      this.$router.push(`/good?id=${id}`)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

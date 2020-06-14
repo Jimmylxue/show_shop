@@ -5,7 +5,13 @@
       <div class="container">
         <ul class="links">
           <li>
-            <a href="/login">请登录~</a>
+            <a href>{{name}}</a>
+          </li>
+          <li v-show="name===''?true:false">
+            <a href="/login">登录</a>
+          </li>
+          <li @click="centerDialogVisible = true" v-show="name===''?false:true">
+            <a href="javascript:void(0);">注销</a>
           </li>
           <li>
             <a href>个人中心</a>
@@ -14,7 +20,7 @@
             <a href>我的订单</a>
           </li>
           <li>
-            <a href>我的购物车</a>
+            <a href="/cart">我的购物车</a>
           </li>
         </ul>
       </div>
@@ -65,10 +71,10 @@
     </div>
     <el-card class="title">
       <div class="rongqi">
-        <h2>小米10 Pro</h2>
+        <h2>{{goodsmsg.goodname}}</h2>
       </div>
     </el-card>
-    <div class="tishi" ref="tishi">
+    <div class="tishi" v-show="name===''" ref="tishi">
       <span>为方便您购买，请提前登录</span>
       <a href="/login">立即登录</a>
       <span @click="$refs.tishi.style.display ='none'" class="quxiao">x</span>
@@ -78,10 +84,28 @@
       <el-card class="card">
         <div class="baoguo">
           <div class="goodimg">
-            <img src="../assets/imgs/goods.jpg" width="100%" height="100%" alt />
+            <img :src="goodsmsg.goodimg" width="100%" height="100%" alt />
           </div>
           <div class="goodmsgs">
-            <h1>小米10 Pro</h1>
+            <h1>{{goodsmsg.goodname}}</h1>
+            <div>{{goodsmsg.goodname}}</div>
+            <div>
+              <span>价格：</span>
+              <span class="money">{{goodsmsg.price}}</span>
+            </div>
+            <div>
+              <span>运费：</span>
+              <span class="baoyou">{{goodsmsg.freight}}</span>
+            </div>
+            <div>
+              <span>套餐类型：</span>
+              <span>{{goodsmsg.type}}</span>
+            </div>
+            <div class="rongliang">
+              <span>存储容量:</span>
+              <span>{{goodsmsg.capacity}}</span>
+            </div>
+            <!-- <h1>小米10 Pro 5G</h1>
             <div>【限时享24期免息向往的生活同款】小米10Pro5g手机骁龙865处理器5G手机学生拍照小米官方旗舰店官网正品米10</div>
             <div>
               <span>价格：</span>
@@ -100,7 +124,7 @@
               <span>8+128</span>
               <span>8+256</span>
               <span>12+512</span>
-            </div>
+            </div>-->
             <div class="count">
               <span>数量:</span>
               <span @click="count--" class="number">-</span>
@@ -142,12 +166,21 @@
         <span>人工客服</span>
       </div>
     </div>
+    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
+      <span>确定要退出当前账号吗？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="centerDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="logout">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import recomend from '../components/recommend'
 import advert from '../components/advertisement.vue'
+
+import { mapActions } from 'vuex'
 export default {
   components: {
     recomend,
@@ -155,8 +188,56 @@ export default {
   },
   data() {
     return {
-      count: 0
+      // 弹窗
+      centerDialogVisible: false,
+      count: 0,
+      goodsmsg: {},
+      name: ''
     }
+  },
+  watch: {
+    $route(e) {
+      location.reload()
+    }
+  },
+  methods: {
+    // ...mapActions(['getGoods']),
+    // 注销
+    logout() {
+      localStorage.removeItem('user')
+      this.centerDialogVisible = false
+      this.$router.push('/login')
+      this.$message({
+        message: '已注销',
+        type: 'success'
+      })
+    },
+    // 个人中心
+    tomine() {
+      if (this.name === '') {
+        this.$message({
+          message: '您还未登录哦~请先登录。',
+          type: 'warning'
+        })
+        return
+      }
+      alert('个人中心')
+    }
+  },
+  async mounted() {
+    if (localStorage.getItem('user')) {
+      this.name = localStorage.getItem('user')
+    }
+    this.id = parseInt(this.$route.query.id)
+    let res = await this.$api.good.getGood(this.id)
+    this.goodsmsg = res.data[0]
+    // console.log(this.goodsmsg)
+    // try {
+    //   // let res = await this.getGoods()
+    //   this.goodsmsg = res[0]
+    // } catch (err) {
+    //   console.log(err)
+    // }
   }
 }
 </script>

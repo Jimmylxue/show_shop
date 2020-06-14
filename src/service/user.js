@@ -15,6 +15,6 @@ export default {
   // 注册
   async register(clientmsg) {
     let res = await axios.post('/api/client/user/register', clientmsg)
-    console.log(res)
+    return res
   },
 }
