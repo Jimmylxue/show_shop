@@ -50,8 +50,9 @@ export default {
   },
   computed: {
     showcolor() {
-      let i = Math.ceil(Math.random() * 5)
-      return `2px solid green`
+      return 'e'
+      // let i = Math.ceil(Math.random() * 5)
+      // return `2px solid green`
     }
   },
   mounted() {

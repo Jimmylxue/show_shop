@@ -137,8 +137,8 @@ export default {
     }
   },
   mounted() {
-    if (localStorage.getItem('user')) {
-      this.name = localStorage.getItem('user')
+    if (sessionStorage.getItem('user')) {
+      this.name = sessionStorage.getItem('user')
     }
   },
   methods: {

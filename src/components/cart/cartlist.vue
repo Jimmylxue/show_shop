@@ -3,7 +3,7 @@
     <el-card>
       <el-table
         v-loading="loading"
-        :data="tableData"
+        :data="cartLists"
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
@@ -17,14 +17,43 @@
           </template>
         </el-table-column>
         <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column label="商品名称" prop="name"></el-table-column>
-        <el-table-column label="单价" prop="danjia"></el-table-column>
-        <el-table-column label="数量" prop="count"></el-table-column>
-        <el-table-column label="小计" prop="money"></el-table-column>
+        <el-table-column label="商品名称" width="450" prop="goodname">
+          <template slot-scope="scope">
+            <div class="mygood">
+              <img :src="scope.row.goodimg" width="100px" height="100px" alt />
+              {{scope.row.goodname}}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="价格信息" align="center" width="150">
+          <template slot-scope="scope">
+            <p>商品单价:{{scope.row.goodprice}}元</p>
+            <p>邮费价格:{{scope.row.goodfreight}}元</p>
+          </template>
+        </el-table-column>
+        <el-table-column label="数量" width="200" align="center">
+          <template slot-scope="scope">
+            <div>
+              <el-input-number
+                size="mini"
+                v-model="scope.row.goodcount"
+                @change="handleChange"
+                :min="1"
+              ></el-input-number>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="小计" align="center" prop="goodprice">
+          <template slot-scope="scope">
+            <div style="color:#ff6700">
+              <p>{{scope.row.goodprice+scope.row.goodfreight}}元</p>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作">
-          <template>
-            <el-tag class="tag" @click="deleteone" type="danger">删除</el-tag>
-            <el-tag class="tag" type="success">结算</el-tag>
+          <template slot-scope="scope">
+            <el-tag class="tag" size="medium" @click="deleteone(scope.row.cartid)" type="danger">删除</el-tag>
+            <!-- <el-tag class="tag" size="medium" type="success">结算</el-tag> -->
           </template>
         </el-table-column>
       </el-table>
@@ -40,20 +69,18 @@
         合计：
         <span>{{allmoney}}</span>元
       </div>
-      <button @click="$router.push('/pay')">去结算</button>
+      <!-- $router.push('/pay') -->
+      <button @click="toPay()">去结算</button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  mounted() {
-    setTimeout(() => {
-      this.loading = !this.loading
-    }, 1500)
-  },
   data() {
     return {
+      userName: '',
+      userId: null,
       loading: true,
       tableData: [
         {
@@ -81,34 +108,67 @@ export default {
           shopId: '10333'
         }
       ],
+      cartLists: [],
       allmoney: 0,
-      selcount: 0
+      selcount: 0,
+      rows: []
     }
   },
   computed: {
     itemcount() {
-      return this.tableData.length
+      return this.cartLists.length
     }
+  },
+  mounted() {
+    this.userName = sessionStorage.getItem('user')
+      ? sessionStorage.getItem('user')
+      : ''
+    this.userId = sessionStorage.getItem('loginUserId')
+      ? sessionStorage.getItem('loginUserId')
+      : ''
+    if (
+      this.userId !== '' ||
+      (this.userId !== null) | (this.userId !== undefined)
+    ) {
+      this.getCartList(this.userId)
+    }
+    setTimeout(() => {
+      this.loading = !this.loading
+    }, 1500)
   },
   methods: {
     handleSelectionChange(rows) {
+      this.rows = rows
+      // console.log(rows)
       this.allmoney = 0
       this.selcount = 0
       rows.forEach(item => {
         this.selcount++
-        this.allmoney += item.money
+        let xiaoji = item.goodprice + item.goodfreight
+        this.allmoney += xiaoji
       })
     },
-    deleteone() {
+    // 删除商品
+    deleteone(id) {
       this.$confirm('您将在购物车中删除该商品, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
+          this.$api.cart.deleteOne({ id }).then(res => {
+            if (res.data.code === 200) {
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              })
+              this.getCartList(this.userId)
+              return
+            }
+            this.$message({
+              type: 'info',
+              message: '网络开了小差~'
+            })
           })
         })
         .catch(() => {
@@ -117,6 +177,20 @@ export default {
             message: '已取消删除'
           })
         })
+    },
+    // 获取用户购物车商品
+    async getCartList(id) {
+      let res = await this.$api.cart.cartList({ id })
+      this.cartLists = res.data
+      this.$emit('counts', this.cartLists.length)
+      console.log(this.cartLists)
+    },
+    // 商品数量发生变化
+    handleChange() {},
+    // 去支付
+    toPay() {
+      sessionStorage.setItem('goodmsg', JSON.stringify(this.rows))
+      this.$router.push('/pay')
     }
   }
 }
@@ -165,11 +239,25 @@ export default {
   button {
     width: 200px;
     height: 50px;
-    background: rgb(224, 224, 224);
+    background: rgb(255, 103, 0);
     font-size: 18px;
     border: none;
     outline: none;
     color: #b0b0b0;
+    color: #fff;
+    cursor: pointer;
+    &:hover {
+      background-color: rgb(242, 88, 7);
+    }
+  }
+}
+.mygood {
+  display: flex;
+  align-items: center;
+  color: #424242;
+  font-size: 18px;
+  img {
+    margin-right: 50px;
   }
 }
 </style>

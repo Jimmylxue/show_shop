@@ -105,35 +105,13 @@
               <span>存储容量:</span>
               <span>{{goodsmsg.capacity}}</span>
             </div>
-            <!-- <h1>小米10 Pro 5G</h1>
-            <div>【限时享24期免息向往的生活同款】小米10Pro5g手机骁龙865处理器5G手机学生拍照小米官方旗舰店官网正品米10</div>
-            <div>
-              <span>价格：</span>
-              <span class="money">4999.00-5999.00</span>
-            </div>
-            <div>
-              <span>运费：</span>
-              <span class="baoyou">包邮</span>
-            </div>
-            <div>
-              <span>套餐类型：</span>
-              <span>官方标配</span>
-            </div>
-            <div class="rongliang">
-              <span>存储容量:</span>
-              <span>8+128</span>
-              <span>8+256</span>
-              <span>12+512</span>
-            </div>-->
             <div class="count">
-              <span>数量:</span>
-              <span @click="count--" class="number">-</span>
-              <input v-model="count" type="text" />
-              <span @click="count++" class="number">+</span> 件
+              <span>数量：</span>
+              <el-input-number v-model="count" size="small" :min="1"></el-input-number>
             </div>
             <div class="btns">
-              <button class="bugnow">立即购买</button>
-              <button class="addcart">加入购物车</button>
+              <button class="bugnow" @click="toBuy">立即购买</button>
+              <button class="addcart" @click="addCart">加入购物车</button>
             </div>
           </div>
         </div>
@@ -148,7 +126,7 @@
         <i class="fa fa-user-o fa-2x"></i>
         <span>个人中心</span>
       </div>
-      <div>
+      <div @click="$router.push('/cart')">
         <i class="fa fa-cart-arrow-down fa-2x"></i>
         <span>购物车</span>
       </div>
@@ -180,7 +158,7 @@
 import recomend from '../components/recommend'
 import advert from '../components/advertisement.vue'
 
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
 export default {
   components: {
     recomend,
@@ -190,13 +168,15 @@ export default {
     return {
       // 弹窗
       centerDialogVisible: false,
-      count: 0,
+      count: 1,
       goodsmsg: {},
-      name: ''
+      name: '',
+      // 用户的id
+      userid: null
     }
   },
   watch: {
-    $route(e) {
+    $route() {
       location.reload()
     }
   },
@@ -222,12 +202,62 @@ export default {
         return
       }
       alert('个人中心')
+    },
+    // 加入购物车
+    async addCart() {
+      if (this.name === '') {
+        this.$notify({
+          title: '温馨提示',
+          message: '您还未登录哦~不能添加至购物车',
+          type: 'warning'
+        })
+        return
+      }
+      if (this.count === 0) {
+        this.$notify.info({
+          title: '温馨提示',
+          message: '商品数量为0是不能添加的到购物车的'
+        })
+      } else {
+        let obj = {
+          userId: this.userid,
+          goodId: this.goodsmsg.goodid,
+          goodName: this.goodsmsg.goodname,
+          goodDesc: this.goodsmsg.gooddesc,
+          buyCount: this.count,
+          goodPrice: this.goodsmsg.price,
+          goodFreight: this.goodsmsg.freight,
+          goodimg: this.goodsmsg.goodimg
+        }
+        let res = await this.$api.cart.addCart(obj)
+        if (res.data.code === 200) {
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+        }
+      }
+    },
+    // 下单
+    toBuy() {
+      if (this.name === '') {
+        this.$notify({
+          title: '警告',
+          message: '需要先登录',
+          type: 'warning'
+        })
+      } else {
+        console.log(typeof this.userid)
+      }
     }
   },
   async mounted() {
-    if (localStorage.getItem('user')) {
-      this.name = localStorage.getItem('user')
-    }
+    this.name = sessionStorage.getItem('user')
+      ? sessionStorage.getItem('user')
+      : ''
+    this.userid = sessionStorage.getItem('loginUserId')
+      ? parseInt(sessionStorage.getItem('loginUserId'))
+      : ''
     this.id = parseInt(this.$route.query.id)
     let res = await this.$api.good.getGood(this.id)
     this.goodsmsg = res.data[0]
@@ -497,21 +527,8 @@ header {
           color: #b5621b;
         }
         .count {
-          input {
-            height: 30px;
-            width: 35px;
-            margin: 0 5px;
-            text-align: center;
-          }
-          .number {
-            display: inline-block;
-            width: 20px;
-            height: 30px;
-            // border: 1px solid #b8b7bd;
-            padding: 0 0px;
-            text-align: center;
-            line-height: 30px;
-            cursor: pointer;
+          span {
+            margin-right: 15px;
           }
         }
         .rongliang {

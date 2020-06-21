@@ -12,7 +12,7 @@
         </div>
         <div class="right">
           <div class="islogin">
-            <span>Jimmy</span>|
+            <span>{{name}}</span>|
             <span>我的订单</span>
           </div>
         </div>
@@ -24,11 +24,11 @@
         <div class="list">
           <h1>收获地址</h1>
           <div class="addres">
-            <div class="addlist">
-              <h4>Jimmy</h4>
-              <p>19905076109</p>
-              <p>福建 泉州市 鲤城区 金龙街道</p>
-              <p>泉州师范学院软件学院</p>
+            <div v-for="item in receiptmsg" :key="item.receipt_id" class="addlist">
+              <h4>{{item.username}}</h4>
+              <p>1{{item.phone}}</p>
+              <p>{{item.province}} {{item.city}} {{item.area}} 金龙街道</p>
+              <p>{{item.detail}}</p>
             </div>
             <div class="add" @click="dialogVisible = true">
               <i class="fa fa-plus-circle fa-2x"></i>
@@ -38,10 +38,11 @@
         </div>
         <div class="list">
           <h1>商品</h1>
-          <div class="good">
-            <span class="name">Redmi Note 8 Pro 8GB+128GB 贝母白</span>
-            <span class="count">1399元 × 1</span>
-            <span class="money">1399元</span>
+          <div v-for="item in goodmsg" :key="item.cartid" class="good gooditem">
+            <img :src="item.goodimg" width="35px" height="35px" alt />
+            <span class="name">{{item.goodname}}</span>
+            <span class="count">{{item.goodprice}}元 × {{item.goodcount}}</span>
+            <span class="money">{{item.goodprice}}元</span>
           </div>
         </div>
         <div class="list">
@@ -56,19 +57,19 @@
             <div>
               <div class="msg">
                 商品件数：
-                <span>1件</span>
+                <span>{{goodmsg.length}}件</span>
               </div>
               <div>
                 商品总价：
-                <span>1399元</span>
+                <span>{{allPrice}}元</span>
               </div>
               <div>
                 运费价格：
-                <span>0元</span>
+                <span>{{allFreight}}元</span>
               </div>
               <div>
                 应付总额：
-                <span>1399元</span>
+                <span>{{allMoney}}元</span>
               </div>
             </div>
           </div>
@@ -120,6 +121,10 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      // 用户收货信息
+      receiptmsg: [],
+      //商品
+      goodmsg: [],
       // 地址表单
       form: {
         name: '',
@@ -130,10 +135,55 @@ export default {
         type: [],
         resource: '',
         desc: ''
-      }
+      },
+      userid: null,
+      name: ''
     }
   },
+  computed: {
+    allPrice() {
+      let money = 0
+      this.goodmsg.forEach(item => {
+        let one = item.goodprice
+        money += one
+      })
+      return money
+    },
+    allFreight() {
+      let money = 0
+      this.goodmsg.forEach(item => {
+        let one = item.goodfreight
+        money += one
+      })
+      return money
+    },
+    allMoney() {
+      let money = 0
+      this.goodmsg.forEach(item => {
+        let one = item.goodprice + item.goodfreight
+        money += one
+      })
+      return money
+    }
+  },
+  mounted() {
+    this.userid = sessionStorage.getItem('loginUserId')
+      ? sessionStorage.getItem('loginUserId')
+      : ''
+    this.name = sessionStorage.getItem('user')
+      ? sessionStorage.getItem('user')
+      : ''
+    if (this.userid !== '') {
+      console.log(this.userid)
+      this.getUserReceipt(this.userid)
+    }
+    this.goodmsg = JSON.parse(sessionStorage.getItem('goodmsg'))
+  },
   methods: {
+    async getUserReceipt(id) {
+      let res = await this.$api.receipt.getUserReceipt({ id })
+      this.receiptmsg = res.data
+    },
     handleClose(done) {
       this.$confirm('确认关闭？')
         .then(() => {
@@ -392,6 +442,14 @@ export default {
     height: 40px;
     background-color: #ff6700;
     border: #ff6700;
+  }
+}
+
+.gooditem {
+  display: flex;
+  align-items: center;
+  img {
+    margin-right: 15px;
   }
 }
 </style>

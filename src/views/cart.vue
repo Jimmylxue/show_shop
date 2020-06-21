@@ -11,11 +11,11 @@
           <span>温馨提示：产品是否购买成功，以最终下单为准哦，请尽快结算</span>
         </div>
         <div class="right">
-          <div class="islogin">
-            <span>Jimmy</span>|
+          <div v-show="userName!==''" class="islogin">
+            <span>{{userName}}</span>|
             <span>我的订单</span>
           </div>
-          <div class="nologin">
+          <div v-show="userName===''" class="nologin">
             <span @click="$router.push('/login')">登录</span>|
             <span @click="$router.push('/login')">注册</span>
           </div>
@@ -24,20 +24,21 @@
     </div>
     <!-- 内容 -->
     <div class="main">
-      <div class="isnotlogin">
+      <div class="isnotlogin" v-show="listCount===0">
         <div class="clear">
           <img src="../assets/imgs/clear.png" width="100%" height="100%" alt />
         </div>
         <div class="nr">
           <h1>您的购物车还是空的！</h1>
-          <h2>登陆后将显示您之前加入的商品</h2>
+          <h2 v-show="userName!==''">可在商城内加入向购物车中添加商品</h2>
+          <h2 v-show="userName===''">登陆后将显示您之前加入的商品</h2>
           <div class="btns">
             <button>立即登录</button>
             <button>马上去购物</button>
           </div>
         </div>
       </div>
-      <cartlist></cartlist>
+      <cartlist @counts="getChild"></cartlist>
       <recommend></recommend>
       <h2 class="endding">已经到底啦~</h2>
     </div>
@@ -51,6 +52,27 @@ export default {
   components: {
     recommend,
     cartlist
+  },
+  data() {
+    return {
+      userName: '',
+      userId: null,
+      listCount: 0
+    }
+  },
+  mounted() {
+    this.userName = sessionStorage.getItem('user')
+      ? sessionStorage.getItem('user')
+      : ''
+    console.log(this.userName)
+    this.userId = sessionStorage.getItem('loginUserId')
+      ? sessionStorage.getItem('loginUserId')
+      : ''
+  },
+  methods: {
+    getChild(e) {
+      this.listCount = e
+    }
   }
 }
 </script>
@@ -100,7 +122,7 @@ export default {
       color: #757575;
       font-size: 0.9rem;
       .islogin {
-        display: none;
+        // display: none;
         span {
           margin: 0 5px;
           cursor: pointer;

@@ -79,6 +79,7 @@ export default {
   },
   methods: {
     ...mapActions(['login', 'getCode']),
+    // ...mapMutations(['setLoginUserMsg']),
     submitForm() {
       if (this.checkstatus === false) {
         this.$message.error('请先勾选用户须知手册')
@@ -97,15 +98,14 @@ export default {
                   message: '恭喜你，登录成功',
                   type: 'success'
                 })
+                // this.setLoginUserMsg(userid)
                 this.$router.push('/')
                 return
               }
             })
-            .catch(err => {
-              console.log(err.body)
+            .catch(() => {
               this.$message.error('账号或密码错误~')
             })
-          // conrage.setItem('user', 'Jimmy')
         }
       })
     },

@@ -2,7 +2,9 @@ import us from '../../service/user'
 
 export default {
   state: {
-    isLogin: localStorage.getItem('token') ? true : false,
+    // Vuex中的数据 一旦刷新页面就会消失  所以有要长期存的东西就不能放在这里
+    loginUserId: null,
+    isLogin: sessionStorage.getItem('token') ? true : false,
     registerid: '',
   },
   mutations: {
@@ -12,15 +14,19 @@ export default {
     setRegisertId(state, value) {
       state.registerid = value
     },
+    setLoginUserId(state, value) {
+      state.loginUserId = value
+    },
   },
   actions: {
     async login({ commit }, clientmsg) {
       let res = await us.login(clientmsg)
       const { code, token, userName } = res.data
       if (code) {
+        sessionStorage.setItem('loginUserId', parseInt(clientmsg.form.userid))
         commit('setLoginState', true)
-        localStorage.setItem('user', userName)
-        localStorage.setItem('token', token)
+        sessionStorage.setItem('user', userName)
+        sessionStorage.setItem('token', token)
       }
       return code
     },
