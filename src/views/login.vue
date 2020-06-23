@@ -12,18 +12,43 @@
             label-width="100px"
             class="demo-ruleForm"
           >
-            <el-form-item label="请输入账号(Login Account)" label-width="auto" prop="userid">
-              <el-input v-model="ruleForm.userid" placeholder="请输入登录账号"></el-input>
+            <el-form-item
+              label="请输入账号(Login Account)"
+              label-width="auto"
+              prop="userid"
+            >
+              <el-input
+                v-model="ruleForm.userid"
+                placeholder="请输入登录账号"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="请输入密码(Login Password)" label-width="auto" prop="userpsd">
-              <el-input v-model="ruleForm.userpsd" type="password" placeholder="请输入登录密码"></el-input>
+            <el-form-item
+              label="请输入密码(Login Password)"
+              label-width="auto"
+              prop="userpsd"
+            >
+              <el-input
+                v-model="ruleForm.userpsd"
+                type="password"
+                placeholder="请输入登录密码"
+              ></el-input>
             </el-form-item>
           </el-form>
           <div class="code">
             <div class="fa fa-refresh reflash" @click="reflash"></div>
-            <input type="text" v-model="VerificationCode" placeholder="请输入验证码" />
+            <input
+              type="text"
+              v-model="VerificationCode"
+              placeholder="请输入验证码"
+            />
             <div class="img">
-              <img ref="imgs" width="100%" height="100%" src="/api//client/user/login" alt />
+              <img
+                ref="imgs"
+                width="100%"
+                height="100%"
+                src="/api//client/user/login"
+                alt
+              />
             </div>
           </div>
           <div class="cando">
@@ -31,11 +56,19 @@
             <a href>密码找回</a>
           </div>
           <div class="read">
-            <input type="checkbox" :checked="checkstatus" @click="checkstatus = !checkstatus" />我已阅读并接受
-            <a href>《用户协议》</a>和
+            <input
+              type="checkbox"
+              :checked="checkstatus"
+              @click="checkstatus = !checkstatus"
+            />我已阅读并接受 <a href>《用户协议》</a>和
             <a href>《隐私政策》</a>
           </div>
-          <el-button type="primary" class="loginbtn" @click="submitForm(ruleForm)">登录</el-button>
+          <el-button
+            type="primary"
+            class="loginbtn"
+            @click="submitForm(ruleForm)"
+            >登录</el-button
+          >
         </div>
       </div>
     </div>
@@ -51,8 +84,8 @@ export default {
       checkstatus: false,
       VerificationCode: '',
       ruleForm: {
-        userid: '173117030',
-        userpsd: '12345678'
+        userid: '173117031',
+        userpsd: 'yshzx171107.',
       },
       rules: {
         userid: [
@@ -61,9 +94,9 @@ export default {
             min: 8,
             max: 12,
             message: '长度在 8 到 12 个字符',
-            trigger: 'blur'
+            trigger: 'blur',
           },
-          { validator: '', trigger: 'blur' }
+          { validator: '', trigger: 'blur' },
         ],
         userpsd: [
           { required: true, message: '请输入登录密码', trigger: 'blur' },
@@ -71,10 +104,10 @@ export default {
             min: 6,
             max: 15,
             message: '长度在 6 到 15 个字符',
-            trigger: 'blur'
-          }
-        ]
-      }
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   methods: {
@@ -82,11 +115,11 @@ export default {
     // ...mapMutations(['setLoginUserMsg']),
     submitForm() {
       if (this.checkstatus === false) {
-        this.$message.error('请先勾选用户须知手册')
+        this.$swal('哎吼~', '清先勾选用户手册~', 'error')
         return
       }
       if (this.VerificationCode === '') {
-        this.$message.error('请填写验证码')
+        this.$swal('哎吼~', '请填写验证码~', 'error')
         return
       }
       this.$refs.ruleForms.validate(valid => {
@@ -94,25 +127,23 @@ export default {
           this.login({ form: this.ruleForm, code: this.VerificationCode })
             .then(code => {
               if (code === 1) {
-                this.$message({
-                  message: '恭喜你，登录成功',
-                  type: 'success'
-                })
+                this.$swal('哎吼~', '登录成功~', 'success')
                 // this.setLoginUserMsg(userid)
                 this.$router.push('/')
                 return
               }
+              this.$swal('哎吼~', '账号或密码错误~', 'error')
             })
             .catch(() => {
-              this.$message.error('账号或密码错误~')
+              this.$swal('哎吼~', '账号或密码错误~', 'error')
             })
         }
       })
     },
     reflash() {
       this.$refs.imgs.src = `/api//client/user/login?time = ${Date.now()}`
-    }
-  }
+    },
+  },
 }
 </script>
 

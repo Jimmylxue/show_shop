@@ -12,7 +12,8 @@
         </div>
         <div class="right">
           <div class="islogin">
-            <span>{{name}}</span>|
+            <span>{{ name }}</span
+            >|
             <span>我的订单</span>
           </div>
         </div>
@@ -24,13 +25,24 @@
         <div class="list">
           <h1>收获地址</h1>
           <div class="addres">
-            <div v-for="item in receiptmsg" :key="item.receipt_id" class="addlist">
-              <h4>{{item.username}}</h4>
-              <p>1{{item.phone}}</p>
-              <p>{{item.province}} {{item.city}} {{item.area}} 金龙街道</p>
-              <p>{{item.detail}}</p>
+            <div
+              v-for="item in receiptmsg"
+              :class="seltItem === receiptmsg.indexOf(item) ? 'isselect' : ''"
+              :key="item.receipt_id"
+              @click="seltItem = receiptmsg.indexOf(item)"
+              class="addlist"
+            >
+              <h4>{{ item.username }}</h4>
+              <p>1{{ item.phone }}</p>
+              <p>
+                {{ item.province }} {{ item.city }} {{ item.area }} 金龙街道
+              </p>
+              <p>{{ item.detail }}</p>
+              <span class="sele" v-show="seltItem === receiptmsg.indexOf(item)"
+                >修改</span
+              >
             </div>
-            <div class="add" @click="dialogVisible = true">
+            <div class="add" @click="addreceipt">
               <i class="fa fa-plus-circle fa-2x"></i>
               <span>添加新地址</span>
             </div>
@@ -40,9 +52,11 @@
           <h1>商品</h1>
           <div v-for="item in goodmsg" :key="item.cartid" class="good gooditem">
             <img :src="item.goodimg" width="35px" height="35px" alt />
-            <span class="name">{{item.goodname}}</span>
-            <span class="count">{{item.goodprice}}元 × {{item.goodcount}}</span>
-            <span class="money">{{item.goodprice}}元</span>
+            <span class="name">{{ item.goodname }}</span>
+            <span class="count"
+              >{{ item.goodprice }}元 × {{ item.goodcount }}</span
+            >
+            <span class="money">{{ item.goodprice }}元</span>
           </div>
         </div>
         <div class="list">
@@ -57,19 +71,19 @@
             <div>
               <div class="msg">
                 商品件数：
-                <span>{{goodmsg.length}}件</span>
+                <span>{{ goodmsg.length }}件</span>
               </div>
               <div>
                 商品总价：
-                <span>{{allPrice}}元</span>
+                <span>{{ allPrice }}元</span>
               </div>
               <div>
                 运费价格：
-                <span>{{allFreight}}元</span>
+                <span>{{ allFreight }}元</span>
               </div>
               <div>
                 应付总额：
-                <span>{{allMoney}}元</span>
+                <span>{{ allMoney }}元</span>
               </div>
             </div>
           </div>
@@ -79,13 +93,25 @@
           <div>
             <div class="way weichat" @click="pay">
               <div>
-                <img src="../assets/weichat.png" width="60px" height="60px" alt />
-              </div>Jimmy
+                <img
+                  src="../assets/weichat.png"
+                  width="60px"
+                  height="60px"
+                  alt
+                />
+              </div>
+              Jimmy
             </div>
             <div class="way airpay" @click="pay">
               <div>
-                <img src="../assets/airpay.png" width="60px" height="60px" alt />
-              </div>Jimmy
+                <img
+                  src="../assets/airpay.png"
+                  width="60px"
+                  height="60px"
+                  alt
+                />
+              </div>
+              Jimmy
             </div>
           </div>
         </div>
@@ -93,30 +119,80 @@
     </div>
 
     <!-- 弹窗 -->
-    <el-dialog title="添加收货地址" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog
+      title="添加收货地址"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="姓名">
-          <el-input placeholder="姓名" v-model="form.name"></el-input>
+          <el-input placeholder="姓名" v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input placeholder="手机号" v-model="form.name"></el-input>
+          <el-input placeholder="手机号" v-model="form.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="地址">
+          <div class="area">
+            <div class="a1">
+              <el-select v-model="form.province" placeholder="选择省">
+                <el-option
+                  v-for="(item, index) in areas"
+                  :key="index"
+                  :label="item.name"
+                  :value="areas[index].name"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <div class="a1">
+              <el-select v-model="form.city" placeholder="选择市">
+                <el-option
+                  v-for="(item, index) in citys"
+                  :key="index"
+                  :label="item.name"
+                  :value="citys[index].name"
+                ></el-option>
+              </el-select>
+              <!-- {{ citys }} -->
+            </div>
+            <div class="a1">
+              <el-select v-model="form.districtAndCounty" placeholder="选择区">
+                <el-option
+                  v-for="(item, index) in districtAndCounty"
+                  :key="index"
+                  :label="item"
+                  :value="districtAndCounty[index]"
+                ></el-option>
+              </el-select>
+            </div>
+          </div>
         </el-form-item>
         <el-form-item label="详细地址">
-          <el-input placeholder="详细地址，路名或街道名称，门牌号" v-model="form.name"></el-input>
+          <el-input
+            placeholder="详细地址，路名或街道名称，门牌号"
+            v-model="form.detail"
+          ></el-input>
         </el-form-item>
         <el-form-item label="地址标签">
-          <el-input placeholder="地址标签 如：”家“，”公司“。限5个字内" v-model="form.name"></el-input>
+          <el-input
+            placeholder="地址标签 如：”家“，”公司“。限5个字内"
+            v-model="form.flag"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer fotters">
-        <el-button @click="dialogVisible = false" class="quxiao">取 消</el-button>
-        <el-button type="primary" class="ok" @click="dialogVisible = false">确 定</el-button>
+        <el-button @click="dialogVisible = false" class="quxiao"
+          >取 消</el-button
+        >
+        <el-button type="primary" class="ok" @click="add">确 定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import area from '@/assets/js/area.js'
 export default {
   data() {
     return {
@@ -125,22 +201,31 @@ export default {
       receiptmsg: [],
       //商品
       goodmsg: [],
+      areas: [],
       // 地址表单
       form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        username: '',
+        phone: '',
+        province: '',
+        city: '',
+        districtAndCounty: '',
+        detail: '',
+        flag: '',
       },
       userid: null,
-      name: ''
+      name: '',
+      seltItem: 0,
+      citys: [],
+      districtAndCounty: [],
     }
   },
   computed: {
+    getcity() {
+      console.log('ssssss', this.form.province)
+      let res = this.areas.filter(item => item.name === this.form.province)
+      this.citys = res[0]
+      return res[0]
+    },
     allPrice() {
       let money = 0
       this.goodmsg.forEach(item => {
@@ -164,9 +249,30 @@ export default {
         money += one
       })
       return money
-    }
+    },
+  },
+  watch: {
+    'form.province': function(newval) {
+      if (newval) {
+        let res = this.areas.filter(item => item.name === this.form.province)
+        this.citys = res[0].city
+        // console.log('555555', this.citys.city)
+      }
+    },
+    'form.city': function(newval) {
+      if (newval) {
+        // console.log('ccccc')
+        // console.log(this.citys)
+        // console.log('1', this.form.city)
+        let res = this.citys.filter(item => item.name === this.form.city)
+        this.districtAndCounty = res[0].districtAndCounty
+        // console.log('6666', this.districtAndCounty)
+      }
+    },
   },
   mounted() {
+    this.areas = area
+    console.log(this.areas)
     this.userid = sessionStorage.getItem('loginUserId')
       ? sessionStorage.getItem('loginUserId')
       : ''
@@ -175,6 +281,7 @@ export default {
       : ''
     if (this.userid !== '') {
       console.log(this.userid)
+      // this.form.userid = this.userid
       this.getUserReceipt(this.userid)
     }
     this.goodmsg = JSON.parse(sessionStorage.getItem('goodmsg'))
@@ -185,20 +292,44 @@ export default {
       this.receiptmsg = res.data
     },
     handleClose(done) {
-      this.$confirm('确认关闭？')
-        .then(() => {
-          done()
-        })
-        .catch(() => {})
+      this.dialogVisible = false
     },
     pay() {
-      this.$message({
-        showClose: true,
-        message: '支付成功',
-        type: 'success'
+      const loading = this.$loading({
+        lock: true,
+        text: '正在支付',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)',
       })
-    }
-  }
+      setTimeout(() => {
+        loading.close()
+        this.$message({
+          showClose: true,
+          message: '支付成功',
+          type: 'success',
+        })
+      }, 2000)
+    },
+    // 添加收货地址
+    addreceipt() {
+      this.form = {}
+      // 加上用户的id
+      this.form.userid = this.userid
+      this.dialogVisible = true
+    },
+    async add() {
+      console.log(this.form)
+      let res = await this.$api.receipt.addUserReceipt(this.form)
+      if (res.data.code === 200) {
+        this.dialogVisible = false
+        this.$swal('哟吼~', '添加成功~', 'success')
+
+        this.getUserReceipt(this.userid)
+        return
+      }
+      this.$swal('哦吼~', '报错了~', 'error')
+    },
+  },
 }
 </script>
 
@@ -358,6 +489,7 @@ export default {
         margin-right: 15px;
         padding: 20px;
         border: 1px solid #e0e0e0;
+        position: relative;
         h4 {
           color: #333;
           font-size: 18px;
@@ -368,6 +500,13 @@ export default {
         }
         &:hover {
           border-color: rgb(176, 176, 176);
+        }
+        .sele {
+          position: absolute;
+          right: 15px;
+          bottom: 10px;
+          color: #ff6700;
+          cursor: pointer;
         }
       }
     }
@@ -450,6 +589,19 @@ export default {
   align-items: center;
   img {
     margin-right: 15px;
+  }
+}
+
+.isselect {
+  border: 1px solid #ff6700 !important;
+}
+
+.area {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  .a1 {
+    width: 31%;
   }
 }
 </style>

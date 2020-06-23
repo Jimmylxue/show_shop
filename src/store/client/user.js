@@ -20,6 +20,7 @@ export default {
   },
   actions: {
     async login({ commit }, clientmsg) {
+      console.log('1111', clientmsg)
       let res = await us.login(clientmsg)
       const { code, token, userName } = res.data
       if (code) {
