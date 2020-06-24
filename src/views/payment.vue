@@ -12,8 +12,7 @@
         </div>
         <div class="right">
           <div class="islogin">
-            <span>{{ name }}</span
-            >|
+            <span>{{ name }}</span>|
             <span>我的订单</span>
           </div>
         </div>
@@ -34,13 +33,9 @@
             >
               <h4>{{ item.username }}</h4>
               <p>1{{ item.phone }}</p>
-              <p>
-                {{ item.province }} {{ item.city }} {{ item.area }} 金龙街道
-              </p>
+              <p>{{ item.province }} {{ item.city }} {{ item.area }} 金龙街道</p>
               <p>{{ item.detail }}</p>
-              <span class="sele" v-show="seltItem === receiptmsg.indexOf(item)"
-                >修改</span
-              >
+              <span class="sele" v-show="seltItem === receiptmsg.indexOf(item)">修改</span>
             </div>
             <div class="add" @click="addreceipt">
               <i class="fa fa-plus-circle fa-2x"></i>
@@ -53,9 +48,7 @@
           <div v-for="item in goodmsg" :key="item.cartid" class="good gooditem">
             <img :src="item.goodimg" width="35px" height="35px" alt />
             <span class="name">{{ item.goodname }}</span>
-            <span class="count"
-              >{{ item.goodprice }}元 × {{ item.goodcount }}</span
-            >
+            <span class="count">{{ item.goodprice }}元 × {{ item.goodcount }}</span>
             <span class="money">{{ item.goodprice }}元</span>
           </div>
         </div>
@@ -91,27 +84,15 @@
         <div class="lists">
           <h1>结算方式</h1>
           <div>
-            <div class="way weichat" @click="pay">
+            <div class="way weichat" @click="pay(0)">
               <div>
-                <img
-                  src="../assets/weichat.png"
-                  width="60px"
-                  height="60px"
-                  alt
-                />
-              </div>
-              Jimmy
+                <img src="../assets/weichat.png" width="60px" height="60px" alt />
+              </div>Jimmy
             </div>
-            <div class="way airpay" @click="pay">
+            <div class="way airpay" @click="pay(1)">
               <div>
-                <img
-                  src="../assets/airpay.png"
-                  width="60px"
-                  height="60px"
-                  alt
-                />
-              </div>
-              Jimmy
+                <img src="../assets/airpay.png" width="60px" height="60px" alt />
+              </div>Jimmy
             </div>
           </div>
         </div>
@@ -119,12 +100,7 @@
     </div>
 
     <!-- 弹窗 -->
-    <el-dialog
-      title="添加收货地址"
-      :visible.sync="dialogVisible"
-      width="30%"
-      :before-close="handleClose"
-    >
+    <el-dialog title="添加收货地址" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="姓名">
           <el-input placeholder="姓名" v-model="form.username"></el-input>
@@ -141,8 +117,7 @@
                   :key="index"
                   :label="item.name"
                   :value="areas[index].name"
-                >
-                </el-option>
+                ></el-option>
               </el-select>
             </div>
             <div class="a1">
@@ -169,22 +144,14 @@
           </div>
         </el-form-item>
         <el-form-item label="详细地址">
-          <el-input
-            placeholder="详细地址，路名或街道名称，门牌号"
-            v-model="form.detail"
-          ></el-input>
+          <el-input placeholder="详细地址，路名或街道名称，门牌号" v-model="form.detail"></el-input>
         </el-form-item>
         <el-form-item label="地址标签">
-          <el-input
-            placeholder="地址标签 如：”家“，”公司“。限5个字内"
-            v-model="form.flag"
-          ></el-input>
+          <el-input placeholder="地址标签 如：”家“，”公司“。限5个字内" v-model="form.flag"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer fotters">
-        <el-button @click="dialogVisible = false" class="quxiao"
-          >取 消</el-button
-        >
+        <el-button @click="dialogVisible = false" class="quxiao">取 消</el-button>
         <el-button type="primary" class="ok" @click="add">确 定</el-button>
       </span>
     </el-dialog>
@@ -210,13 +177,14 @@ export default {
         city: '',
         districtAndCounty: '',
         detail: '',
-        flag: '',
+        flag: ''
       },
       userid: null,
       name: '',
       seltItem: 0,
       citys: [],
       districtAndCounty: [],
+      allmoney: 0
     }
   },
   computed: {
@@ -232,6 +200,7 @@ export default {
         let one = item.goodprice
         money += one
       })
+      this.allmoney = money
       return money
     },
     allFreight() {
@@ -249,7 +218,7 @@ export default {
         money += one
       })
       return money
-    },
+    }
   },
   watch: {
     'form.province': function(newval) {
@@ -268,7 +237,7 @@ export default {
         this.districtAndCounty = res[0].districtAndCounty
         // console.log('6666', this.districtAndCounty)
       }
-    },
+    }
   },
   mounted() {
     this.areas = area
@@ -294,21 +263,83 @@ export default {
     handleClose(done) {
       this.dialogVisible = false
     },
-    pay() {
-      const loading = this.$loading({
-        lock: true,
-        text: '正在支付',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)',
+    pay(way) {
+      console.log(way)
+      console.log(this.goodmsg)
+      let obj = {}
+      obj.userid = this.userid
+      obj.buyname = this.name
+      obj.goodid = this.goodmsg.reduce((msg, item) => {
+        return (msg += `-${item.goodid}`)
+      }, '')
+      obj.goodcount = this.goodmsg.reduce((count, item) => {
+        return (count += item.goodcount)
+      }, 0)
+      obj.payWay = way
+      obj.createtime = Date.now()
+      obj.payState = 0
+      obj.orderprice = this.allmoney
+      let area = this.receiptmsg[this.seltItem]
+      this.$swal({
+        title: '付款提示',
+        text: '立即付款吗老板~',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dd6b55',
+        confirmButtonText: '是的,立即购买',
+        cancelButtonText: '容我三思',
+        dangerMode: true
+      }).then(willDelete => {
+        if (willDelete.value) {
+          obj.payState = 1
+          this.$api.order.addorder({ obj, area }).then(res => {
+            if (res.data.code === 200) {
+              this.$swal('哟吼~', '购买成功~', 'success')
+              return
+            }
+            this.$swal('哎吼~', '出错了~', 'error')
+          })
+        } else {
+          obj.payState = 0
+          // console.log('bbb')
+          this.$api.order.addorder({ obj, area }).then(res => {
+            if (res.date.code === 200) {
+              this.$swal('哟吼~', '以下单啦，请及时付款~', 'success')
+              return
+            }
+            this.$swal('哎吼~', '出错了~', 'error')
+          })
+        }
       })
-      setTimeout(() => {
-        loading.close()
-        this.$message({
-          showClose: true,
-          message: '支付成功',
-          type: 'success',
-        })
-      }, 2000)
+
+      // this.$swal({
+      //   title: 'Are you sure?',
+      //   text:
+      //     'Once deleted, you will not be able to recover this imaginary file!',
+      //   icon: 'warning',
+      //   buttons: true,
+      //   dangerMode: true
+      // }).then(willDelete => {
+      //   console.log(willDelete)
+      //   if (willDelete) {
+      //     console.log('aaa')
+      //   } else {
+      //     console.log('bbb')
+      //   }
+      // })
+
+      console.log(obj.goodcount)
+
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: '正在支付',
+      //   spinner: 'el-icon-loading',
+      //   background: 'rgba(0, 0, 0, 0.7)'
+      // })
+      // setTimeout(() => {
+      //   loading.close()
+      //   this.$swal('哟吼~', '支付成功~', 'success')
+      // }, 2000)
     },
     // 添加收货地址
     addreceipt() {
@@ -323,13 +354,12 @@ export default {
       if (res.data.code === 200) {
         this.dialogVisible = false
         this.$swal('哟吼~', '添加成功~', 'success')
-
         this.getUserReceipt(this.userid)
         return
       }
-      this.$swal('哦吼~', '报错了~', 'error')
-    },
-  },
+      this.$swal('哦吼~', '报错了~', 'success')
+    }
+  }
 }
 </script>
 

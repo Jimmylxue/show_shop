@@ -2,12 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import ElementUI from 'element-ui'
+import ElementUI from 'element-ui' ///
 
 import interceptor from './interceptor'
 import vueSweetAlert2 from './plugins/sweetalert2'
 
-import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/index.css' ///
 import 'font-awesome/css/font-awesome.min.css'
 import './assets/css/reset.css'
 
