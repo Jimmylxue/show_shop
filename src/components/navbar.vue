@@ -10,14 +10,11 @@
           <li v-show="name === '' ? true : false">
             <a href="/login">登录</a>
           </li>
-          <li
-            @click="centerDialogVisible = true"
-            v-show="name === '' ? false : true"
-          >
+          <li @click="centerDialogVisible = true" v-show="name === '' ? false : true">
             <a @click="logout">注销</a>
           </li>
           <li>
-            <a href>个人中心</a>
+            <a href="/users/portal">个人中心</a>
           </li>
           <li>
             <a href>我的订单</a>
@@ -106,12 +103,7 @@
       </div>
     </div>
     <!-- 弹窗 -->
-    <el-dialog
-      title="提示"
-      :visible.sync="centerDialogVisible"
-      width="30%"
-      center
-    >
+    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
       <span>确定要退出当前账号吗？</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
@@ -134,14 +126,14 @@ export default {
     HotSale,
     recommend,
     advertisement,
-    myvideo,
+    myvideo
   },
 
   data() {
     return {
       // 弹窗
       centerDialogVisible: false,
-      name: '',
+      name: ''
     }
   },
   mounted() {
@@ -156,7 +148,7 @@ export default {
       this.$router.push('/login')
       this.$message({
         message: '已注销',
-        type: 'success',
+        type: 'success'
       })
     },
     // 个人中心
@@ -164,13 +156,13 @@ export default {
       if (this.name === '') {
         this.$message({
           message: '您还未登录哦~请先登录。',
-          type: 'warning',
+          type: 'warning'
         })
         return
       }
       alert('个人中心')
-    },
-  },
+    }
+  }
 }
 </script>
 

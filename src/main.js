@@ -11,6 +11,15 @@ import 'element-ui/lib/theme-chalk/index.css' ///
 import 'font-awesome/css/font-awesome.min.css'
 import './assets/css/reset.css'
 
+import VueSocketIo from 'vue-socket.io'
+
+Vue.use(
+  new VueSocketIo({
+    debug: true,
+    connection: 'http://127.0.0.1:666',
+  })
+)
+
 import api from './service/index'
 Vue.prototype.$api = api
 

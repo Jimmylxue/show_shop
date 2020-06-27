@@ -17,4 +17,7 @@ export default {
     let res = await axios.post('/api/client/user/register', clientmsg)
     return res
   },
+  async getUserMsg(params) {
+    return await axios.post('/api/client/user/getUser', params)
+  },
 }

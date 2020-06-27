@@ -6,6 +6,10 @@ import gooddetail from '../views/gooddetail.vue'
 import cart from '../views/cart.vue'
 import payment from '../views/payment.vue'
 import register from '../views/register.vue'
+import user from '@/views/mine.vue'
+import orderdetail from '@/components/order/orderdetail.vue'
+import portal from '@/components/portal/portal.vue'
+import chat from '@/views/chat.vue'
 
 Vue.use(VueRouter)
 
@@ -23,6 +27,15 @@ const routes = [
   { path: '/good', component: gooddetail },
   { path: '/cart', component: cart },
   { path: '/pay', component: payment },
+  {
+    path: '/users',
+    component: user,
+    children: [
+      { path: 'order', component: orderdetail },
+      { path: 'portal', component: portal },
+    ],
+  },
+  { path: '/chat', component: chat },
 ]
 
 const router = new VueRouter({
