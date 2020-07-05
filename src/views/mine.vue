@@ -97,7 +97,7 @@
         <span>商业合作</span>
         <span class="last">联系作者</span>
       </div>
-      <div>
+      <div @click="$router.push('/chat')">
         <i class="fa fa-comment-o fa-2x"></i>
         <span>人工客服</span>
       </div>

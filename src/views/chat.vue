@@ -235,7 +235,8 @@ header {
       // background-color: skyblue;
       display: flex;
       flex-direction: column;
-      padding: 0 15px;
+      // padding: 0 15px;
+      padding-left: 15px;
       & > div:nth-child(1) {
         width: 100%;
         height: 396px;
@@ -244,6 +245,7 @@ header {
           width: 100%;
           height: 100%;
           overflow: auto;
+          padding-right: 15px;
           .conts {
             width: 100%;
 
@@ -300,6 +302,7 @@ header {
           border-radius: 10px;
           margin-right: 10px;
           background-color: #fff;
+          cursor: pointer;
         }
       }
       & > div:nth-child(3) {

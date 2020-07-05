@@ -20,6 +20,13 @@ Vue.use(
   })
 )
 
+// 定义全局都可以使用的转换时间的过滤器
+Vue.filter('formatTime', val => {
+  let time = new Date(val * 1) // *1 是为了将字符串类型转换能number类型
+  let str = `${time.getFullYear()}-${time.getMonth()}-${time.getDate()} ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`
+  return str
+})
+
 import api from './service/index'
 Vue.prototype.$api = api
 

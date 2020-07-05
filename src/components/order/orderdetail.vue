@@ -24,6 +24,7 @@
           <div class="msg">
             <span>订单号：{{scope.row.orderid}}</span>
             <span>订单价格：{{scope.row.orderprice}}</span>
+            <span>下单时间：{{scope.row.createtime | formatTime}}</span>
           </div>
         </template>
       </el-table-column>
@@ -191,6 +192,7 @@ header {
         margin-right: 10px;
         font-size: 16px;
         color: #757575;
+        cursor: pointer;
       }
     }
   }
