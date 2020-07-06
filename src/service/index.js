@@ -3,6 +3,7 @@ import user from './user'
 import cart from './cart'
 import receipt from './receipt'
 import order from './order'
+import medium from './medium'
 
 export default {
   good,
@@ -10,4 +11,5 @@ export default {
   cart,
   receipt,
   order,
+  medium,
 }

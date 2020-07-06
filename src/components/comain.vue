@@ -26,8 +26,8 @@
         <classify></classify>
       </div>
       <el-carousel indicator-position="outside" autoplay height="500px">
-        <el-carousel-item v-for="item in lburl" :key="item">
-          <img :src="item" width="100%" height="100%" alt />
+        <el-carousel-item v-for="item in lburl" :key="item.sliderid">
+          <img :src="item.sliderimg" width="100%" height="100%" alt />
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -81,18 +81,14 @@ export default {
     return {
       classifyshow: false,
       name: '',
-      lburl: [
-        require('../assets/imgs/lunbo/lb1.jpg'),
-        require('../assets/imgs/lunbo/lb2.jpg'),
-        require('../assets/imgs/lunbo/lb3.jpg'),
-        require('../assets/imgs/lunbo/lb4.jpg')
-      ]
+      lburl: []
     }
   },
   mounted() {
     if (localStorage.getItem('user')) {
       this.name = localStorage.getItem('user')
     }
+    this.getSlider()
   },
   components: {
     classify
@@ -103,6 +99,10 @@ export default {
     },
     noshowclassify() {
       this.classifyshow = !this.classifyshow
+    },
+    async getSlider() {
+      let res = await this.$api.medium.getSlider()
+      this.lburl = res.data
     }
   }
 }
@@ -111,10 +111,6 @@ export default {
 <style lang="less" scoped>
 .roots {
   width: 100%;
-  // height: 30px;
-  // background-color: salmon;
-  // // height: 300px;
-  // height: 30vh;
   display: flex;
 }
 .nav {
