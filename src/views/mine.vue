@@ -79,7 +79,7 @@
       <advertisement></advertisement>
     </div>
 
-    <div class="toolbar">
+    <!-- <div class="toolbar">
       <div @click="tomine">
         <i class="fa fa-user-o fa-2x"></i>
         <span>个人中心</span>
@@ -101,7 +101,8 @@
         <i class="fa fa-comment-o fa-2x"></i>
         <span>人工客服</span>
       </div>
-    </div>
+    </div>-->
+    <toolBar></toolBar>
     <footer>
       <h2 class="endding">已经到底啦~</h2>
     </footer>
@@ -109,12 +110,14 @@
 </template>
 
 <script>
-import navs from '@/components/top.vue'
+import toolBar from '@/components/navigation/toolBar.vue'
+import navs from '@/components/navbar.vue'
 import advertisement from '@/components/advertisement.vue'
 export default {
   components: {
     navs,
-    advertisement
+    advertisement,
+    toolBar
   },
   data() {
     return {

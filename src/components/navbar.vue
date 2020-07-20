@@ -29,7 +29,7 @@
     <div class="nav">
       <el-card class="search">
         <div class="container">
-          <div class="logo">
+          <div class="logo" @click="$router.push('/home')">
             <img width="100%" height="100%" src="../assets/imgs/logo.jpg" alt />
           </div>
           <div class="searchbar">
@@ -39,26 +39,8 @@
             </div>
             <div class="links">
               <ul>
-                <li>
-                  <a class="check" href>屏幕维修</a>
-                </li>
-                <li>
-                  <a href>电池更换</a>
-                </li>
-                <li>
-                  <a href>iPone 11 Pro Max</a>
-                </li>
-                <li>
-                  <a href>小米 10 Pro</a>
-                </li>
-                <li>
-                  <a href>魅族17</a>
-                </li>
-                <li>
-                  <a href>刷机</a>
-                </li>
-                <li>
-                  <a href>周边</a>
+                <li v-for="(item,index) in btnList" :key="index">
+                  <a class="check" href>{{item.name}}</a>
                 </li>
               </ul>
             </div>
@@ -95,15 +77,25 @@ export default {
     return {
       // 弹窗
       centerDialogVisible: false,
-      name: ''
+      name: '',
+      btnList: []
     }
   },
   mounted() {
-    if (sessionStorage.getItem('user')) {
-      this.name = sessionStorage.getItem('user')
-    }
+    // if (sessionStorage.getItem('user')) {
+    //   this.name = sessionStorage.getItem('user')
+    // }
+    this.name = sessionStorage.getItem('user')
+      ? sessionStorage.getItem('user')
+      : ''
+    this.getbtns()
   },
   methods: {
+    async getbtns() {
+      let res = await this.$api.medium.getBtns()
+      // console.log(res)
+      this.btnList = res.data
+    },
     // 注销
     logout() {
       this.centerDialogVisible = false

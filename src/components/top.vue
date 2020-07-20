@@ -28,7 +28,7 @@
     <div class="nav">
       <el-card class="search">
         <div class="container">
-          <div class="logo">
+          <div class="logo" @click="$router.push('/home')">
             <img width="100%" height="100%" src="../assets/imgs/logo.jpg" alt />
           </div>
           <div class="searchbar">

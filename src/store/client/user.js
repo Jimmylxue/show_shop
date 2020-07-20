@@ -6,6 +6,7 @@ export default {
     loginUserId: null,
     isLogin: sessionStorage.getItem('token') ? true : false,
     registerid: '',
+    user: {},
   },
   mutations: {
     setLoginState(state, value) {
@@ -17,16 +18,22 @@ export default {
     setLoginUserId(state, value) {
       state.loginUserId = value
     },
+    setUserMsg(state, value) {
+      state.user = value
+    },
   },
   actions: {
     async login({ commit }, clientmsg) {
       console.log('1111', clientmsg)
       let res = await us.login(clientmsg)
-      const { code, token, userName } = res.data
+      const { code, token, userName, msg } = res.data
+      // console.log(portrait)
       if (code) {
+        commit('setUserMsg', res.data)
         sessionStorage.setItem('loginUserId', parseInt(clientmsg.form.userid))
         commit('setLoginState', true)
         sessionStorage.setItem('user', userName)
+        sessionStorage.setItem('header', msg.header)
         sessionStorage.setItem('token', token)
       }
       return code

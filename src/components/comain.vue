@@ -35,38 +35,19 @@
       <el-card class="conts">
         <div class="user">
           <div class="header">
-            <img src="../assets/imgs/header.jpg" width="100%" height="100%" alt />
+            <img
+              :src="header?header:'http://127.0.0.1:666/header/default.png'"
+              width="100%"
+              height="100%"
+              alt
+            />
           </div>
-          <div class="name">{{name===''?'请登录':name}}</div>
+          <div class="name">{{name?name:'请登录'}}</div>
         </div>
         <div class="more">
-          <div class="firstline">
-            <img src="../assets/fonts/ditie.png" alt />
-            <span>地铁</span>
-          </div>
-          <div class="firstline">
-            <img src="../assets/fonts/city.png" alt />
-            <span>城市</span>
-          </div>
-          <div class="firstline">
-            <img src="../assets/fonts/weather.png" alt />
-            <span>天气</span>
-          </div>
-          <div>
-            <img src="../assets/fonts/database.png" alt />
-            <span>数据库</span>
-          </div>
-          <div>
-            <img src="../assets/fonts/luntan.png" alt />
-            <span>论坛</span>
-          </div>
-          <div>
-            <img src="../assets/fonts/hot.png" alt />
-            <span>热搜</span>
-          </div>
-          <div>
-            <img src="../assets/fonts/ditie.png" alt />
-            <span>地铁</span>
+          <div v-for="(item,index) in functionMode" :key="index" class="firstline">
+            <img :src="item.img" alt />
+            <span>{{item.functionName}}</span>
           </div>
         </div>
       </el-card>
@@ -81,14 +62,21 @@ export default {
     return {
       classifyshow: false,
       name: '',
-      lburl: []
+      lburl: [],
+      functionMode: [],
+      header: ''
     }
   },
   mounted() {
-    if (localStorage.getItem('user')) {
-      this.name = localStorage.getItem('user')
-    }
+    this.header = sessionStorage.getItem('header')
+      ? sessionStorage.getItem('header')
+      : ''
+    this.name = sessionStorage.getItem('user')
+      ? sessionStorage.getItem('user')
+      : ''
+
     this.getSlider()
+    this.getFunctions()
   },
   components: {
     classify
@@ -103,6 +91,10 @@ export default {
     async getSlider() {
       let res = await this.$api.medium.getSlider()
       this.lburl = res.data
+    },
+    async getFunctions() {
+      let res = await this.$api.medium.getFunctionMode()
+      this.functionMode = res.data
     }
   }
 }
