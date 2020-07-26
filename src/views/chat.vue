@@ -42,7 +42,7 @@
                 class="conts"
                 v-for="(item,index) in msg"
                 :key="index"
-                :class="item.userid===undefined?'change':''"
+                :class="item.client?'':'change'"
               >
                 <div class="item">
                   <div class="headers">
@@ -134,6 +134,7 @@ export default {
       })
     })
     this.sockets.listener.subscribe('touser', data => {
+      console.log('xxx', data)
       this.msg.push(data)
     })
   },
@@ -146,9 +147,11 @@ export default {
     },
     logout() {},
     send() {
-      let obj = { text: this.text }
+      let obj = { userid: this.userid, text: this.text }
+      console.log('99999999', obj)
       this.$socket.emit('tobacks', obj)
       this.msg.push(obj)
+      console.log(this.msg)
       this.text = ''
     }
   }

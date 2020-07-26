@@ -28,6 +28,8 @@ export default {
       let res = await us.login(clientmsg)
       const { code, token, userName, msg } = res.data
       // console.log(portrait)
+      console.log('data', res.data)
+      console.log('xxxxxx', userName)
       if (code) {
         commit('setUserMsg', res.data)
         sessionStorage.setItem('loginUserId', parseInt(clientmsg.form.userid))
@@ -51,6 +53,9 @@ export default {
       let { code, registerid } = res.data
       commit('setRegisertId', registerid)
       return code
+    },
+    logout() {
+      console.log('清空数据')
     },
   },
   getters: {},
