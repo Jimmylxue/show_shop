@@ -97,7 +97,7 @@ export default {
               if (code === 1) {
                 this.$swal('哎吼~', '登录成功~', 'success')
                 // this.setLoginUserMsg(userid)
-                this.$router.push('/')
+                this.$router.push('/home')
                 return
               }
               this.$swal('哎吼~', '账号或密码错误~', 'error')

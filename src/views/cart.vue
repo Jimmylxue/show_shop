@@ -13,7 +13,7 @@
         <div class="right">
           <div v-show="userName!==''" class="islogin">
             <span>{{userName}}</span>|
-            <span>我的订单</span>
+            <span @click="$router.push('/users/order')">我的订单</span>
           </div>
           <div v-show="userName===''" class="nologin">
             <span @click="$router.push('/login')">登录</span>|

@@ -7,8 +7,11 @@
       <hot-sale></hot-sale>
       <advertisement></advertisement>
       <recommend></recommend>
-      <myvideo></myvideo>
+      <myvideo @play="playVideo()"></myvideo>
       <h2 class="endding">已经到底啦~</h2>
+    </div>
+    <div class="videoContainer">
+      <myVideos @closeVideo="closePlay()" v-show="videoFlag"></myVideos>
     </div>
   </div>
 </template>
@@ -21,6 +24,7 @@ import HotSale from '@/components/HotSale.vue'
 import recommend from '@/components/recommend.vue'
 import advertisement from '@/components/advertisement.vue'
 import myvideo from '@/components/video'
+import myVideos from '@/components/video/myVideo.vue'
 export default {
   components: {
     navbar,
@@ -29,11 +33,24 @@ export default {
     HotSale,
     recommend,
     advertisement,
-    myvideo
+    myvideo,
+    myVideos,
   },
   data() {
-    return {}
-  }
+    return {
+      videoFlag: false,
+    }
+  },
+  methods: {
+    playVideo() {
+      console.log('aiaiai')
+      this.videoFlag = true
+    },
+    closePlay() {
+      alert('closeaa')
+      this.videoFlag = false
+    },
+  },
 }
 </script>
 
@@ -117,5 +134,10 @@ export default {
       }
     }
   }
+}
+.videoContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 </style>

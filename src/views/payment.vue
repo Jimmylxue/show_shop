@@ -12,8 +12,9 @@
         </div>
         <div class="right">
           <div class="islogin">
-            <span>{{ name }}</span>|
-            <span>我的订单</span>
+            <span>{{ name }}</span
+            >|
+            <span @click="$router.push('/users/order')">我的订单</span>
           </div>
         </div>
       </div>
@@ -33,9 +34,13 @@
             >
               <h4>{{ item.username }}</h4>
               <p>1{{ item.phone }}</p>
-              <p>{{ item.province }} {{ item.city }} {{ item.area }} 金龙街道</p>
+              <p>
+                {{ item.province }} {{ item.city }} {{ item.area }} 金龙街道
+              </p>
               <p>{{ item.detail }}</p>
-              <span class="sele" v-show="seltItem === receiptmsg.indexOf(item)">修改</span>
+              <span class="sele" v-show="seltItem === receiptmsg.indexOf(item)"
+                >修改</span
+              >
             </div>
             <div class="add" @click="addreceipt">
               <i class="fa fa-plus-circle fa-2x"></i>
@@ -48,7 +53,9 @@
           <div v-for="item in goodmsg" :key="item.cartid" class="good gooditem">
             <img :src="item.goodimg" width="35px" height="35px" alt />
             <span class="name">{{ item.goodname }}</span>
-            <span class="count">{{ item.goodprice }}元 × {{ item.goodcount }}</span>
+            <span class="count"
+              >{{ item.goodprice }}元 × {{ item.goodcount }}</span
+            >
             <span class="money">{{ item.goodprice }}元</span>
           </div>
         </div>
@@ -68,7 +75,7 @@
               </div>
               <div>
                 商品总价：
-                <span>{{ allPrice }}元</span>
+                <span>{{ allPrice() }}元</span>
               </div>
               <div>
                 运费价格：
@@ -86,13 +93,25 @@
           <div>
             <div class="way weichat" @click="pay(0)">
               <div>
-                <img src="../assets/weichat.png" width="60px" height="60px" alt />
-              </div>Jimmy
+                <img
+                  src="../assets/weichat.png"
+                  width="60px"
+                  height="60px"
+                  alt
+                />
+              </div>
+              Jimmy
             </div>
             <div class="way airpay" @click="pay(1)">
               <div>
-                <img src="../assets/airpay.png" width="60px" height="60px" alt />
-              </div>Jimmy
+                <img
+                  src="../assets/airpay.png"
+                  width="60px"
+                  height="60px"
+                  alt
+                />
+              </div>
+              Jimmy
             </div>
           </div>
         </div>
@@ -100,7 +119,12 @@
     </div>
 
     <!-- 弹窗 -->
-    <el-dialog title="添加收货地址" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+    <el-dialog
+      title="添加收货地址"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="姓名">
           <el-input placeholder="姓名" v-model="form.username"></el-input>
@@ -144,14 +168,22 @@
           </div>
         </el-form-item>
         <el-form-item label="详细地址">
-          <el-input placeholder="详细地址，路名或街道名称，门牌号" v-model="form.detail"></el-input>
+          <el-input
+            placeholder="详细地址，路名或街道名称，门牌号"
+            v-model="form.detail"
+          ></el-input>
         </el-form-item>
         <el-form-item label="地址标签">
-          <el-input placeholder="地址标签 如：”家“，”公司“。限5个字内" v-model="form.flag"></el-input>
+          <el-input
+            placeholder="地址标签 如：”家“，”公司“。限5个字内"
+            v-model="form.flag"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer fotters">
-        <el-button @click="dialogVisible = false" class="quxiao">取 消</el-button>
+        <el-button @click="dialogVisible = false" class="quxiao"
+          >取 消</el-button
+        >
         <el-button type="primary" class="ok" @click="add">确 定</el-button>
       </span>
     </el-dialog>
@@ -177,32 +209,24 @@ export default {
         city: '',
         districtAndCounty: '',
         detail: '',
-        flag: ''
+        flag: '',
       },
       userid: null,
       name: '',
       seltItem: 0,
       citys: [],
       districtAndCounty: [],
-      allmoney: 0
+      allmoney: 0,
     }
   },
   computed: {
-    getcity() {
-      console.log('ssssss', this.form.province)
-      let res = this.areas.filter(item => item.name === this.form.province)
-      this.citys = res[0]
-      return res[0]
-    },
-    allPrice() {
-      let money = 0
-      this.goodmsg.forEach(item => {
-        let one = item.goodprice
-        money += one
-      })
-      this.allmoney = money
-      return money
-    },
+    // getcity() {
+    //   console.log('ssssss', this.form.province)
+    //   let res = this.areas.filter(item => item.name === this.form.province)
+    //   this.citys = res[0]
+    //   return res[0]
+    // },
+
     allFreight() {
       let money = 0
       this.goodmsg.forEach(item => {
@@ -218,7 +242,7 @@ export default {
         money += one
       })
       return money
-    }
+    },
   },
   watch: {
     'form.province': function(newval) {
@@ -237,7 +261,7 @@ export default {
         this.districtAndCounty = res[0].districtAndCounty
         // console.log('6666', this.districtAndCounty)
       }
-    }
+    },
   },
   mounted() {
     this.areas = area
@@ -256,11 +280,20 @@ export default {
     this.goodmsg = JSON.parse(sessionStorage.getItem('goodmsg'))
   },
   methods: {
+    allPrice() {
+      let money = 0
+      this.goodmsg.forEach(item => {
+        let one = item.goodprice
+        money += one
+      })
+      this.allmoney = money
+      return money
+    },
     async getUserReceipt(id) {
       let res = await this.$api.receipt.getUserReceipt({ id })
       this.receiptmsg = res.data
     },
-    handleClose(done) {
+    handleClose() {
       this.dialogVisible = false
     },
     pay(way) {
@@ -288,7 +321,7 @@ export default {
         confirmButtonColor: '#dd6b55',
         confirmButtonText: '是的,立即购买',
         cancelButtonText: '容我三思',
-        dangerMode: true
+        dangerMode: true,
       }).then(willDelete => {
         if (willDelete.value) {
           obj.payState = 1
@@ -358,8 +391,8 @@ export default {
         return
       }
       this.$swal('哦吼~', '报错了~', 'success')
-    }
-  }
+    },
+  },
 }
 </script>
 

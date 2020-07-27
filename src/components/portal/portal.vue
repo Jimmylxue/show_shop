@@ -4,7 +4,7 @@
       <div class="header">
         <div class="head">
           <div class="imgs">
-            <img src="@/assets/imgs/head.jpg" width="100%" height="100%" alt />
+            <img :src="header" width="100%" height="100%" alt />
           </div>
         </div>
         <div>
@@ -92,8 +92,13 @@
 
 <script>
 export default {
+  data() {
+    return {
+      header: ''
+    }
+  },
   mounted() {
-    console.log('hhh')
+    this.header = sessionStorage.getItem('header')
   }
 }
 </script>

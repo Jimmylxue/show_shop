@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui' ///
+import Video from 'video.js'
+import api from './service/index'
 
 import interceptor from './interceptor'
 import vueSweetAlert2 from './plugins/sweetalert2'
@@ -10,6 +12,7 @@ import vueSweetAlert2 from './plugins/sweetalert2'
 import 'element-ui/lib/theme-chalk/index.css' ///
 import 'font-awesome/css/font-awesome.min.css'
 import './assets/css/reset.css'
+import 'video.js/dist/video-js.css'
 
 import VueSocketIo from 'vue-socket.io'
 
@@ -27,8 +30,8 @@ Vue.filter('formatTime', val => {
   return str
 })
 
-import api from './service/index'
 Vue.prototype.$api = api
+Vue.prototype.$video = Video
 
 Vue.use(vueSweetAlert2)
 

@@ -2,7 +2,7 @@
   <div class="rootv">
     <h2>产品视频</h2>
     <div class="container">
-      <div class="good">
+      <div @click="playVideo" class="good">
         <img src="../assets/video/01.jpg" width="100%" height="100%" alt />
         <span>小米10 发布会</span>
       </div>
@@ -23,7 +23,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  methods: {
+    playVideo() {
+      this.$emit('play', true)
+    },
+  },
+}
 </script>
 
 <style lang="less" scoped>

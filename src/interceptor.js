@@ -3,6 +3,7 @@ import axios from 'axios'
 
 export default vm => {
   axios.interceptors.request.use(config => {
+    // alert('gogogo')
     const token = sessionStorage.getItem('token')
     console.log('token')
     if (token) {
