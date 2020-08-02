@@ -4,14 +4,18 @@
     <toolBar></toolBar>
     <div class="main">
       <comain></comain>
-      <hot-sale></hot-sale>
-      <advertisement></advertisement>
-      <recommend></recommend>
-      <myvideo @play="playVideo()"></myvideo>
-      <h2 class="endding">已经到底啦~</h2>
+    </div>
+    <div class="bgcolor">
+      <div class="main">
+        <hot-sale></hot-sale>
+        <advertisement></advertisement>
+        <recommend></recommend>
+        <myvideo @play="playVideo(url)"></myvideo>
+        <h2 class="endding">已经到底啦~</h2>
+      </div>
     </div>
     <div class="videoContainer">
-      <myVideos @closeVideo="closePlay()" v-show="videoFlag"></myVideos>
+      <myVideos @closeVideo="closePlay()" :url="url" v-if="videoFlag"></myVideos>
     </div>
   </div>
 </template>
@@ -34,23 +38,26 @@ export default {
     recommend,
     advertisement,
     myvideo,
-    myVideos,
+    myVideos
   },
   data() {
     return {
       videoFlag: false,
+      url: ''
     }
   },
   methods: {
-    playVideo() {
-      console.log('aiaiai')
+    playVideo(urls) {
+      // console.log(urls)
+      // console.log('aiaiai', urls)
+      // this.url = url
       this.videoFlag = true
     },
     closePlay() {
-      alert('closeaa')
+      // alert('closeaa')
       this.videoFlag = false
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -66,6 +73,11 @@ export default {
     padding: 20px 0 50px 0;
   }
   // border: 1px solid #ccc;
+}
+
+.bgcolor {
+  padding-top: 5px;
+  background-color: rgb(245, 245, 245);
 }
 @media only screen and (max-width: 1540px) {
   header {

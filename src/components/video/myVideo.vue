@@ -2,7 +2,7 @@
   <div class="myVideo">
     <div class="test_two_box">
       <video id="myVideo" class="video-js">
-        <source src="//vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
+        <source :src="videoUrl" type="video/mp4" />
       </video>
       <i class="fa fa-window-close-o" @click="close" aria-hidden="true"></i>
     </div>
@@ -12,10 +12,15 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      videoUrl: ''
+    }
   },
   mounted() {
-    this.initVideo()
+    this.videoUrl = this.$store.state.videoUrl
+    setTimeout(() => {
+      this.initVideo()
+    }, 1000)
   },
   methods: {
     initVideo() {
@@ -29,14 +34,14 @@ export default {
         //设置视频播放器的显示宽度（以像素为单位）
         width: '1200px',
         //设置视频播放器的显示高度（以像素为单位）
-        height: '600px',
+        height: '600px'
       })
     },
     close() {
-      alert('close')
+      // alert('close')
       this.$emit('closeVideo', true)
-    },
-  },
+    }
+  }
 }
 </script>
 
