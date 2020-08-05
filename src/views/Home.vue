@@ -47,10 +47,7 @@ export default {
     }
   },
   methods: {
-    playVideo(urls) {
-      // console.log(urls)
-      // console.log('aiaiai', urls)
-      // this.url = url
+    playVideo() {
       this.videoFlag = true
     },
     closePlay() {

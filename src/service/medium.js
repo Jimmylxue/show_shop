@@ -13,4 +13,7 @@ export default {
   async getVideo() {
     return await axios.post('/api/video/list')
   },
+  async getLoginBg() {
+    return await axios.post('/api/ui/loginBg/nowLoginBg')
+  },
 }

@@ -43,7 +43,7 @@ export default {
     return {
       count: 0,
       allscroll: 0,
-      itemcount: 5,
+      itemcount: 0,
       allgoos: null,
       colors: ['#2ecc71', '#3498db', '#e67e22', '#f1c40f', '#1abc9c']
     }
@@ -51,12 +51,9 @@ export default {
   computed: {
     showcolor() {
       return 'e'
-      // let i = Math.ceil(Math.random() * 5)
-      // return `2px solid green`
     }
   },
   mounted() {
-    this.star()
     setTimeout(() => {
       this.allgoos = this.$store.state.good.allGoods.filter(item => {
         if (item.tag === 'discount') {
@@ -67,6 +64,9 @@ export default {
 
       // console.log(this.allgoos)
     }, 500)
+    setTimeout(() => {
+      this.star()
+    }, 3000)
   },
   watch: {
     count(newval) {
@@ -80,23 +80,25 @@ export default {
   },
   methods: {
     star() {
-      // setTimeout(() => {
-      //   let inter = setInterval(() => {
-      //     if (this.allgoos.length !== 0) {
-      //       // this.$refs.scr.scrollLeft += 1
-      //       this.allscroll++
-      //       if (this.allscroll >= (this.itemcount - 4) * 275) {
-      //         this.$refs.scr.scrollLeft = 0
-      //         this.count = 0
-      //         this.allscroll = 0
-      //       }
-      //       this.count++
-      //       if (this.count === 275) {
-      //         clearInterval(inter)
-      //       }
-      //     }
-      //   }, 0)
-      // }, 1000)
+      let inter = setInterval(() => {
+        console.log('comming')
+        if (this.allgoos.length !== 0) {
+          this.$refs.scr.scrollLeft += 1
+          this.allscroll++
+          console.log(this.allscroll, (this.itemcount - 4) * 275)
+          if (this.allscroll >= 600) {
+            this.$refs.scr.scrollLeft = 0
+            this.count = 0
+            this.allscroll = 0
+
+            return
+          }
+          this.count++
+          if (this.count === 275) {
+            clearInterval(inter)
+          }
+        }
+      }, 0)
     },
     Detail(id) {
       this.$router.push(`/good?id=${id}`)

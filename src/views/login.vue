@@ -1,5 +1,6 @@
 <template>
   <div class="root">
+    <img class="myBg" :src="loginBg" width="100%" height="100%" alt />
     <div class="container">
       <div class="formbox">
         <div class="islogin" ref="islogin">
@@ -48,6 +49,7 @@ import { mapActions } from 'vuex'
 export default {
   data() {
     return {
+      loginBg: '',
       checkstatus: false,
       VerificationCode: '',
       ruleForm: {
@@ -77,9 +79,16 @@ export default {
       }
     }
   },
+  mounted() {
+    this.getLoginBg()
+  },
   methods: {
     ...mapActions(['login', 'getCode']),
     // ...mapMutations(['setLoginUserMsg']),
+    async getLoginBg() {
+      let res = await this.$api.medium.getLoginBg()
+      this.loginBg = res.data[0].background
+    },
     submitForm() {
       if (this.checkstatus === false) {
         this.$swal('哎吼~', '清先勾选用户手册~', 'error')
@@ -119,8 +128,14 @@ export default {
 .root {
   width: 100vw;
   height: 100vh;
-  background-image: url(../assets/bg/01.jpg);
+  // background-image: url(../assets/bg/01.jpg);
   background-position: 0 140px;
+  .myBg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
   .container {
     width: 80%;
     height: 100vh;
