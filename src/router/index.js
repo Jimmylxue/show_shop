@@ -11,6 +11,7 @@ import orderdetail from '@/components/order/orderdetail.vue'
 import portal from '@/components/portal/portal.vue'
 import chat from '@/views/chat.vue'
 import myVideo from '@/components/video/myVideo.vue'
+import weather from '@/views/weather.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,7 @@ const routes = [
   },
   { path: '/chat', meta: { auth: true }, component: chat },
   { path: '/video', meta: { auth: true }, component: myVideo },
+  { path: '/weather', meta: { auth: false }, component: weather },
 ]
 
 const router = new VueRouter({

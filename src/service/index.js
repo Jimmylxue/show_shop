@@ -4,6 +4,7 @@ import cart from './cart'
 import receipt from './receipt'
 import order from './order'
 import medium from './medium'
+import weather from './weather'
 
 export default {
   good,
@@ -12,4 +13,5 @@ export default {
   receipt,
   order,
   medium,
+  weather,
 }
