@@ -16,4 +16,7 @@ export default {
   async getLoginBg() {
     return await axios.post('/api/ui/loginBg/nowLoginBg')
   },
+  async getHoverList() {
+    return await axios.get('/api/ui/hover_list/list')
+  },
 }

@@ -4,26 +4,26 @@
       <el-card class="navs">
         <ul>
           <li>
-            <a @mouseover="showclassify" @mouseout="noshowclassify" href>电脑/COMPUTER</a>
+            <a @mouseover="showclassify('电脑')" @mouseout="noshowclassify" href>电脑/COMPUTER</a>
           </li>
           <li>
-            <a @mouseover="showclassify" @mouseout="noshowclassify" href>电视/TV</a>
+            <a @mouseover="showclassify('电视')" @mouseout="noshowclassify" href>电视/TV</a>
           </li>
           <li>
-            <a @mouseover="showclassify" @mouseout="noshowclassify" href>手机/PHONE</a>
+            <a @mouseover="showclassify('手机')" @mouseout="noshowclassify" href>手机/PHONE</a>
           </li>
           <li>
-            <a @mouseover="showclassify" @mouseout="noshowclassify" href>耳机/EARPHONE</a>
+            <a @mouseover="showclassify('耳机')" @mouseout="noshowclassify" href>耳机/EARPHONE</a>
           </li>
           <li>
-            <a @mouseover="showclassify" @mouseout="noshowclassify" href>手表/WATCH</a>
+            <a @mouseover="showclassify('手表')" @mouseout="noshowclassify" href>手表/WATCH</a>
           </li>
         </ul>
       </el-card>
     </div>
     <div class="lb">
-      <div v-show="classifyshow" class="classifybox">
-        <classify></classify>
+      <div v-show="classifyshow" @mouseover="objover" @mouseout="objout" class="classifybox">
+        <classify :list="selList"></classify>
       </div>
       <el-carousel indicator-position="outside" autoplay height="500px">
         <el-carousel-item v-for="item in lburl" :key="item.sliderid">
@@ -45,7 +45,12 @@
           <div class="name">{{name?name:'请登录'}}</div>
         </div>
         <div class="more">
-          <div v-for="(item,index) in functionMode" :key="index" class="firstline">
+          <div
+            v-for="(item,index) in functionMode"
+            @click="toFun(item.functionName)"
+            :key="index"
+            class="firstline"
+          >
             <img :src="item.img" alt />
             <span>{{item.functionName}}</span>
           </div>
@@ -64,7 +69,10 @@ export default {
       name: '',
       lburl: [],
       functionMode: [],
-      header: ''
+      header: '',
+      hoverTimerout: null,
+      hoverList: [],
+      selList: []
     }
   },
   mounted() {
@@ -77,16 +85,33 @@ export default {
 
     this.getSlider()
     this.getFunctions()
+    this.getHoverList()
   },
   components: {
     classify
   },
   methods: {
-    showclassify() {
-      this.classifyshow = !this.classifyshow
+    showclassify(value) {
+      this.selList = this.hoverList.filter(item => item.classify == value)
+      clearTimeout(this.hoverTimerout)
+      this.classifyshow = true
     },
     noshowclassify() {
-      this.classifyshow = !this.classifyshow
+      this.hoverTimerout = setTimeout(() => {
+        this.classifyshow = false
+      }, 500)
+    },
+    objover() {
+      clearTimeout(this.hoverTimerout)
+      this.classifyshow = true
+    },
+    objout() {
+      this.classifyshow = false
+    },
+    toFun(value) {
+      if (value == '天气') {
+        this.$router.push('/weather')
+      }
     },
     async getSlider() {
       let res = await this.$api.medium.getSlider()
@@ -95,6 +120,10 @@ export default {
     async getFunctions() {
       let res = await this.$api.medium.getFunctionMode()
       this.functionMode = res.data
+    },
+    async getHoverList() {
+      let res = await this.$api.medium.getHoverList()
+      this.hoverList = res.data
     }
   }
 }

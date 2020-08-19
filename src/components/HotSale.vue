@@ -15,10 +15,10 @@
       <div ref="scr" class="hdgoods">
         <div
           v-for="(item,index) in allgoos"
-          :style="showcolor"
           @click="Detail(item.goodid)"
           :key="index"
           class="good"
+          :style="randerColor"
         >
           <div class="imgs">
             <img :src="item.goodimg" width="100%" height="100%" alt />
@@ -51,6 +51,12 @@ export default {
   computed: {
     showcolor() {
       return 'e'
+    },
+    randerColor() {
+      console.log(123456)
+      let randnum = Math.floor(Math.random() * this.colors.length)
+      console.log(randnum)
+      return `border-top:1px solid ${this.colors[randnum]}`
     }
   },
   mounted() {
@@ -81,11 +87,11 @@ export default {
   methods: {
     star() {
       let inter = setInterval(() => {
-        console.log('comming')
+        // console.log('comming')
         if (this.allgoos.length !== 0) {
           this.$refs.scr.scrollLeft += 1
           this.allscroll++
-          console.log(this.allscroll, (this.itemcount - 4) * 275)
+          // console.log(this.allscroll, (this.itemcount - 4) * 275)
           if (this.allscroll >= 600) {
             this.$refs.scr.scrollLeft = 0
             this.count = 0
@@ -156,7 +162,7 @@ h2 {
       div {
         width: 50px;
         height: 50px;
-        background-color: rgb(96, 87, 81);
+        // background-color: rgb(96, 87, 81);
         font-size: 2rem;
         display: flex;
         justify-content: center;
@@ -237,6 +243,7 @@ h2 {
       border: 1px solid #ddd;
       border-top: 1px solid #e53935;
       box-shadow: 0 0 10px #ddd;
+      transition: 0.5s all ease-in-out;
     }
   }
 }

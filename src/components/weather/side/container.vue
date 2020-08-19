@@ -3,6 +3,7 @@
     <div class="header">
       <div class="title">
         <!-- <img src="../assets/logo (1).png" alt=""> -->
+        <span @click="$router.go(-1)">Show_shop</span>
       </div>
       <div class="form">
         <div class="nowcity">
@@ -16,11 +17,7 @@
                 <span class="time">{{ today }}</span>
               </div>
               <div class="detailContainer">
-                <div
-                  class="indexMsg"
-                  v-for="(item, index) in future"
-                  :key="index"
-                >
+                <div class="indexMsg" v-for="(item, index) in future" :key="index">
                   <div class="itemDetail">
                     <span>
                       <i class="el-icon-date"></i>
@@ -45,13 +42,7 @@
           </transition>
         </div>
         <form>
-          <input
-            autocomplete="off"
-            type="text"
-            name="city"
-            v-model="City"
-            placeholder="请输入城市名称"
-          />
+          <input autocomplete="off" type="text" name="city" v-model="City" placeholder="请输入城市名称" />
           <input type="button" @click="postCity" value="查询" />
           <i class="el-icon-location-information"></i>
           <div class="msgInfo">
@@ -76,10 +67,7 @@
           </transition>
         </div>
         <div class="more">
-          <span
-            @mouseleave="suthormsg = !suthormsg"
-            @mouseenter="suthormsg = !suthormsg"
-          >
+          <span @mouseleave="suthormsg = !suthormsg" @mouseenter="suthormsg = !suthormsg">
             <i class="el-icon-s-operation"></i>更多
           </span>
         </div>
@@ -100,7 +88,7 @@
 import asside from '@/components/weather/side/asside'
 export default {
   components: {
-    asside,
+    asside
   },
   data() {
     return {
@@ -112,7 +100,7 @@ export default {
       show: false,
       spancontrol: false,
       Qr: false,
-      suthormsg: false,
+      suthormsg: false
     }
   },
   mounted() {
@@ -153,7 +141,7 @@ export default {
           console.log(this.future)
           this.$message({
             message: '查询成功',
-            type: 'success',
+            type: 'success'
           })
         } else {
           this.$message.error('请输入正确的城市名哦~')
@@ -166,8 +154,8 @@ export default {
     },
     troggle() {
       this.show = !this.show
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -195,6 +183,10 @@ export default {
   width: 150px;
   height: 35px;
   margin-left: 20px;
+}
+.title > span {
+  font-size: 20px;
+  color: #fff;
 }
 .title > img {
   height: 100%;
