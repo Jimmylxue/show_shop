@@ -3,13 +3,13 @@
     <navbar></navbar>
     <el-card class="title">
       <div class="rongqi">
-        <h2>{{goodsmsg.goodname}}</h2>
+        <h2>{{ goodsmsg.goodname }}</h2>
       </div>
     </el-card>
-    <div class="tishi" v-show="name===''" ref="tishi">
+    <div class="tishi" v-show="name === ''" ref="tishi">
       <span>为方便您购买，请提前登录</span>
       <a href="/login">立即登录</a>
-      <span @click="$refs.tishi.style.display ='none'" class="quxiao">x</span>
+      <span @click="$refs.tishi.style.display = 'none'" class="quxiao">x</span>
     </div>
     <!-- 主体区 -->
     <div class="main">
@@ -19,27 +19,31 @@
             <img :src="goodsmsg.goodimg" width="100%" height="100%" alt />
           </div>
           <div class="goodmsgs">
-            <h1>{{goodsmsg.goodname}}</h1>
-            <div>{{goodsmsg.goodname}}</div>
+            <h1>{{ goodsmsg.goodname }}</h1>
+            <div>{{ goodsmsg.goodname }}</div>
             <div>
               <span>价格：</span>
-              <span class="money">{{goodsmsg.price}}</span>
+              <span class="money">{{ goodsmsg.price }}</span>
             </div>
             <div>
               <span>运费：</span>
-              <span class="baoyou">{{goodsmsg.freight}}</span>
+              <span class="baoyou">{{ goodsmsg.freight }}</span>
             </div>
             <div>
               <span>套餐类型：</span>
-              <span>{{goodsmsg.type}}</span>
+              <span>{{ goodsmsg.type }}</span>
             </div>
             <div class="rongliang">
               <span>存储容量:</span>
-              <span>{{goodsmsg.capacity}}</span>
+              <span>{{ goodsmsg.capacity }}</span>
             </div>
             <div class="count">
               <span>数量：</span>
-              <el-input-number v-model="count" size="small" :min="1"></el-input-number>
+              <el-input-number
+                v-model="count"
+                size="small"
+                :min="1"
+              ></el-input-number>
             </div>
             <div class="btns">
               <button class="bugnow" @click="toBuy">立即购买</button>
@@ -49,10 +53,13 @@
         </div>
       </el-card>
       <div class="detail_img">
-        <img v-for="(item,index) in imgs" :key="index" :src="item" width="100%" alt />
-        <!-- <img src="@/assets/imgs/detail/mi10.jpg" width="100%" alt />
-        <img src="@/assets/imgs/detail/mi10.jpg" width="100%" alt />
-        <img src="@/assets/imgs/detail/mi10.jpg" width="100%" alt />-->
+        <img
+          v-for="(item, index) in imgs"
+          :key="index"
+          :src="item"
+          width="100%"
+          alt
+        />
       </div>
 
       <recomend></recomend>
@@ -61,7 +68,12 @@
     </div>
 
     <toolBar></toolBar>
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
       <span>确定要退出当前账号吗？</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
@@ -83,7 +95,7 @@ export default {
     navbar,
     recomend,
     advert,
-    toolBar
+    toolBar,
   },
   data() {
     return {
@@ -94,7 +106,7 @@ export default {
       name: '',
       // 用户的id
       userid: null,
-      imgs: []
+      imgs: [],
     }
   },
   watch: {
@@ -111,7 +123,7 @@ export default {
       this.$router.push('/login')
       this.$message({
         message: '已注销',
-        type: 'success'
+        type: 'success',
       })
     },
     // 个人中心
@@ -119,7 +131,7 @@ export default {
       if (this.name === '') {
         this.$message({
           message: '您还未登录哦~请先登录。',
-          type: 'warning'
+          type: 'warning',
         })
         return
       }
@@ -131,14 +143,14 @@ export default {
         this.$notify({
           title: '温馨提示',
           message: '您还未登录哦~不能添加至购物车',
-          type: 'warning'
+          type: 'warning',
         })
         return
       }
       if (this.count === 0) {
         this.$notify.info({
           title: '温馨提示',
-          message: '商品数量为0是不能添加的到购物车的'
+          message: '商品数量为0是不能添加的到购物车的',
         })
       } else {
         let obj = {
@@ -149,13 +161,13 @@ export default {
           buyCount: this.count,
           goodPrice: this.goodsmsg.price,
           goodFreight: this.goodsmsg.freight,
-          goodimg: this.goodsmsg.goodimg
+          goodimg: this.goodsmsg.goodimg,
         }
         let res = await this.$api.cart.addCart(obj)
         if (res.data.code === 200) {
           this.$message({
             message: '添加成功',
-            type: 'success'
+            type: 'success',
           })
         }
       }
@@ -166,12 +178,12 @@ export default {
         this.$notify({
           title: '警告',
           message: '需要先登录',
-          type: 'warning'
+          type: 'warning',
         })
       } else {
         console.log(typeof this.userid)
       }
-    }
+    },
   },
   async mounted() {
     this.name = sessionStorage.getItem('user')
@@ -187,7 +199,7 @@ export default {
     if (this.goodsmsg !== null) {
       this.imgs = this.goodsmsg.imgs.split('@')
     }
-  }
+  },
 }
 </script>
 

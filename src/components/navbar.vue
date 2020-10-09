@@ -1,56 +1,7 @@
 <template>
   <div class="root">
-    <!-- 导航栏 -->
-    <header>
-      <div class="container">
-        <ul class="links">
-          <li>
-            <a href>{{ name }}</a>
-          </li>
-          <li v-show="name === '' ? true : false">
-            <a href="/login">登录</a>
-          </li>
-          <li @click="centerDialogVisible = true" v-show="name === '' ? false : true">
-            <a @click="logout">注销</a>
-          </li>
-          <li>
-            <a href="/users/portal">个人中心</a>
-          </li>
-          <li>
-            <a href="/users/order">我的订单</a>
-          </li>
-          <li>
-            <a href="/cart">我的购物车</a>
-          </li>
-        </ul>
-      </div>
-    </header>
     <!-- 搜素栏 -->
-    <div class="nav">
-      <el-card class="search">
-        <div class="container">
-          <div class="logo" @click="$router.push('/home')">
-            <img width="100%" height="100%" src="../assets/imgs/logo.jpg" alt />
-          </div>
-          <div class="searchbar">
-            <div class="inputs">
-              <input type="text" placeholder="请输入商品信息 如:小米10" />
-              <div class="click fa fa-search fa-lg"></div>
-            </div>
-            <div class="links">
-              <ul>
-                <li v-for="(item,index) in btnList" :key="index">
-                  <a class="check" href>{{item.name}}</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="guanggao">
-            <img src="../assets/imgs/guanggao.jpg" alt />
-          </div>
-        </div>
-      </el-card>
-    </div>
+    <top></top>
     <!-- 主体栏 -->
     <!-- <div class="main">
       <comain></comain>
@@ -61,7 +12,12 @@
       <h2 class="endding">已经到底啦~</h2>
     </div>-->
     <!-- 弹窗 -->
-    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="30%" center>
+    <el-dialog
+      title="提示"
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      center
+    >
       <span>确定要退出当前账号吗？</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="centerDialogVisible = false">取 消</el-button>
@@ -72,13 +28,17 @@
 </template>
 
 <script>
+import top from '@/components/top.vue'
 export default {
+  components: {
+    top,
+  },
   data() {
     return {
       // 弹窗
       centerDialogVisible: false,
       name: '',
-      btnList: []
+      btnList: [],
     }
   },
   mounted() {
@@ -102,7 +62,7 @@ export default {
       this.$router.push('/login')
       this.$message({
         message: '已注销',
-        type: 'success'
+        type: 'success',
       })
     },
     // 个人中心
@@ -110,13 +70,13 @@ export default {
       if (this.name === '') {
         this.$message({
           message: '您还未登录哦~请先登录。',
-          type: 'warning'
+          type: 'warning',
         })
         return
       }
       alert('个人中心')
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -6,13 +6,13 @@
     </div>
     <div class="container">
       <div
-        v-for="(item,index) in recommand"
+        v-for="(item, index) in recommand"
         @click="toDetail(item.goodid)"
         :key="index"
         class="good"
       >
         <img :src="item.goodimg" alt />
-        <span>{{item.goodname}}</span>
+        <span>{{ item.goodname }}</span>
       </div>
       <!-- <div class="good">
         <img src="../assets/goods/recommend/02.jpg" alt />
@@ -57,15 +57,16 @@ export default {
     // console.log('hello')
   },
   computed: {
-    ...mapState({ recommand: state => state.good.recommand })
+    ...mapState({ recommand: state => state.good.recommand }),
   },
   methods: {
     ...mapActions(['getGoods']),
     toDetail(id) {
       this.$router.push(`/good?id=${id}`)
-    }
-  }
+    },
+  },
 }
+
 </script>
 
 <style lang="less" scoped>

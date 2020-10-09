@@ -15,7 +15,11 @@
       </div>
     </div>
     <div class="videoContainer">
-      <myVideos @closeVideo="closePlay()" :url="url" v-if="videoFlag"></myVideos>
+      <myVideos
+        @closeVideo="closePlay()"
+        :url="url"
+        v-if="videoFlag"
+      ></myVideos>
     </div>
   </div>
 </template>
@@ -38,12 +42,12 @@ export default {
     recommend,
     advertisement,
     myvideo,
-    myVideos
+    myVideos,
   },
   data() {
     return {
       videoFlag: false,
-      url: ''
+      url: '',
     }
   },
   methods: {
@@ -53,8 +57,8 @@ export default {
     closePlay() {
       // alert('closeaa')
       this.videoFlag = false
-    }
-  }
+    },
+  },
 }
 </script>
 

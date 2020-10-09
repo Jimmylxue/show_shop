@@ -7,14 +7,16 @@
         <img src="../assets/imgs/lunbo/shandian.png" alt />
         <span class="endtime">距离结束还有:</span>
         <div class="time">
-          <div>01</div>:
-          <div>52</div>:
+          <div>01</div>
+          :
+          <div>52</div>
+          :
           <div>30</div>
         </div>
       </div>
       <div ref="scr" class="hdgoods">
         <div
-          v-for="(item,index) in allgoos"
+          v-for="(item, index) in allgoos"
           @click="Detail(item.goodid)"
           :key="index"
           class="good"
@@ -24,11 +26,11 @@
             <img :src="item.goodimg" width="100%" height="100%" alt />
           </div>
           <div class="msg">
-            <span>{{item.goodname}}</span>
+            <span>{{ item.goodname }}</span>
             <span class="miaoshu">item.gooddesc</span>
             <div>
-              <span>{{item.nowPrice}}元</span>
-              <span>{{item.price}}元</span>
+              <span>{{ item.nowPrice }}元</span>
+              <span>{{ item.price }}元</span>
             </div>
           </div>
         </div>
@@ -45,7 +47,7 @@ export default {
       allscroll: 0,
       itemcount: 0,
       allgoos: null,
-      colors: ['#2ecc71', '#3498db', '#e67e22', '#f1c40f', '#1abc9c']
+      colors: ['#2ecc71', '#3498db', '#e67e22', '#f1c40f', '#1abc9c'],
     }
   },
   computed: {
@@ -53,11 +55,11 @@ export default {
       return 'e'
     },
     randerColor() {
-      console.log(123456)
+      // console.log(123456)
       let randnum = Math.floor(Math.random() * this.colors.length)
       console.log(randnum)
       return `border-top:1px solid ${this.colors[randnum]}`
-    }
+    },
   },
   mounted() {
     setTimeout(() => {
@@ -82,7 +84,7 @@ export default {
           this.star()
         }, 3000)
       }
-    }
+    },
   },
   methods: {
     star() {
@@ -108,8 +110,8 @@ export default {
     },
     Detail(id) {
       this.$router.push(`/good?id=${id}`)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -158,7 +160,6 @@ h2 {
       font-size: 2rem;
       justify-content: center;
       align-items: center;
-      color: rgb(96, 87, 81);
       div {
         width: 50px;
         height: 50px;
@@ -169,6 +170,7 @@ h2 {
         align-items: center;
         margin: 0 5px;
         color: #fff;
+        background-color: rgb(96, 87, 81);
       }
     }
   }

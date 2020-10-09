@@ -9,7 +9,10 @@
           <li v-show="name === '' ? true : false">
             <a href="/login">登录</a>
           </li>
-          <li @click="centerDialogVisible = true" v-show="name === '' ? false : true">
+          <li
+            @click="centerDialogVisible = true"
+            v-show="name === '' ? false : true"
+          >
             <a @click="logout">注销</a>
           </li>
           <li>
@@ -33,7 +36,23 @@
           </div>
           <div class="searchbar">
             <div class="inputs">
-              <input type="text" placeholder="请输入商品信息 如:小米10" />
+              <input
+                type="text"
+                v-model="search_text"
+                placeholder="请输入商品信息 如:小米10"
+                @blur="blurFoucs"
+              />
+              <div class="searchList" v-show="inputList.length !== 0">
+                <ul>
+                  <li
+                    v-for="(item, index) in inputList"
+                    :key="index"
+                    @click="$router.push(`/good?id=${item.goodid}`)"
+                  >
+                    {{ item.goodname }}
+                  </li>
+                </ul>
+              </div>
               <div class="click fa fa-search fa-lg"></div>
             </div>
             <div class="links">
@@ -75,8 +94,20 @@
 export default {
   data() {
     return {
-      name: ''
+      name: '',
+      search_text: '', // input输入框的值
+      timers: null, // 防抖
+      inputList: [],
     }
+  },
+  watch: {
+    search_text() {
+      clearTimeout(this.timers)
+      this.timers = setTimeout(() => {
+        // clearTimeout(this.timers)
+        this.fuzzyQuery()
+      }, 1000)
+    },
   },
   mounted() {
     if (sessionStorage.getItem('user')) {
@@ -89,7 +120,7 @@ export default {
       this.$router.push('/login')
       this.$message({
         message: '已注销',
-        type: 'success'
+        type: 'success',
       })
     },
     // 个人中心
@@ -97,17 +128,38 @@ export default {
       if (this.name === '') {
         this.$message({
           message: '您还未登录哦~请先登录。',
-          type: 'warning'
+          type: 'warning',
         })
         return
       }
       alert('个人中心')
-    }
-  }
+    },
+    inputChange() {
+      // console.log('I am CHANGE')
+    },
+    // 输入框失去焦点
+    blurFoucs() {
+      this.inputList = []
+    },
+    async fuzzyQuery() {
+      let params = {}
+      params.keyWord = this.search_text
+
+      let res = await this.$api.good.getFuzzyQuery(params)
+      if (res.data.code === 200) {
+        if (res.data.result.length > 0) {
+          this.inputList = res.data.result
+        }
+      }
+    },
+  },
 }
 </script>
 
 <style lang="less" scoped>
+.navstop {
+  // height: 300px;
+}
 header {
   height: 40px;
   background-color: rgb(226, 226, 228);
@@ -136,6 +188,7 @@ header {
   }
 }
 .search {
+  overflow: inherit; //  让溢出的部分自有显示  也不会有滚动条
   .container {
     margin: 0 auto;
     // border: 1px solid #ccc;
@@ -171,6 +224,34 @@ header {
           outline: none;
           padding-left: 1rem;
           font-size: 1.1rem;
+        }
+        .searchList {
+          box-sizing: content-box;
+          width: 100%;
+          // height: 50px;
+          position: absolute;
+          z-index: 9999;
+          float: left;
+          left: -3px;
+
+          top: 47px;
+          background-color: rgba(255, 255, 255, 1);
+          border: 3px solid #e74c3c;
+          border-top: none;
+          > ul {
+            > li {
+              width: 100%;
+              height: 40px;
+              padding-left: 15px;
+              color: #333;
+              font-size: 16px;
+              line-height: 40px;
+              cursor: pointer;
+            }
+            > li:hover {
+              color: #e74c3c;
+            }
+          }
         }
         .click {
           width: 48px;

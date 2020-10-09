@@ -4,25 +4,40 @@
       <el-card class="navs">
         <ul>
           <li>
-            <a @mouseover="showclassify('电脑')" @mouseout="noshowclassify" href>电脑/COMPUTER</a>
+            <a @mouseover="showclassify('电脑')" @mouseout="noshowclassify" href
+              >电脑/COMPUTER</a
+            >
           </li>
           <li>
-            <a @mouseover="showclassify('电视')" @mouseout="noshowclassify" href>电视/TV</a>
+            <a @mouseover="showclassify('电视')" @mouseout="noshowclassify" href
+              >电视/TV</a
+            >
           </li>
           <li>
-            <a @mouseover="showclassify('手机')" @mouseout="noshowclassify" href>手机/PHONE</a>
+            <a @mouseover="showclassify('手机')" @mouseout="noshowclassify" href
+              >手机/PHONE</a
+            >
           </li>
           <li>
-            <a @mouseover="showclassify('耳机')" @mouseout="noshowclassify" href>耳机/EARPHONE</a>
+            <a @mouseover="showclassify('耳机')" @mouseout="noshowclassify" href
+              >耳机/EARPHONE</a
+            >
           </li>
           <li>
-            <a @mouseover="showclassify('手表')" @mouseout="noshowclassify" href>手表/WATCH</a>
+            <a @mouseover="showclassify('手表')" @mouseout="noshowclassify" href
+              >手表/WATCH</a
+            >
           </li>
         </ul>
       </el-card>
     </div>
     <div class="lb">
-      <div v-show="classifyshow" @mouseover="objover" @mouseout="objout" class="classifybox">
+      <div
+        v-show="classifyshow"
+        @mouseover="objover"
+        @mouseout="objout"
+        class="classifybox"
+      >
         <classify :list="selList"></classify>
       </div>
       <el-carousel indicator-position="outside" autoplay height="500px">
@@ -36,23 +51,23 @@
         <div class="user">
           <div class="header">
             <img
-              :src="header?header:'http://127.0.0.1:666/header/default.png'"
+              :src="header ? header : 'http://127.0.0.1:666/header/default.png'"
               width="100%"
               height="100%"
               alt
             />
           </div>
-          <div class="name">{{name?name:'请登录'}}</div>
+          <div class="name">{{ name ? name : '请登录' }}</div>
         </div>
         <div class="more">
           <div
-            v-for="(item,index) in functionMode"
+            v-for="(item, index) in functionMode"
             @click="toFun(item.functionName)"
             :key="index"
             class="firstline"
           >
             <img :src="item.img" alt />
-            <span>{{item.functionName}}</span>
+            <span>{{ item.functionName }}</span>
           </div>
         </div>
       </el-card>
@@ -72,7 +87,7 @@ export default {
       header: '',
       hoverTimerout: null,
       hoverList: [],
-      selList: []
+      selList: [],
     }
   },
   mounted() {
@@ -88,7 +103,7 @@ export default {
     this.getHoverList()
   },
   components: {
-    classify
+    classify,
   },
   methods: {
     showclassify(value) {
@@ -124,8 +139,8 @@ export default {
     async getHoverList() {
       let res = await this.$api.medium.getHoverList()
       this.hoverList = res.data
-    }
-  }
+    },
+  },
 }
 </script>
 

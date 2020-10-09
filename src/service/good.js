@@ -8,4 +8,8 @@ export default {
   async getSomeGood(params) {
     return await axios.post('/api/client/good/getSomeGood', params)
   },
+  // 输入框模糊查询
+  async getFuzzyQuery(params) {
+    return await axios.post('/api/client/good/fuzzy', params)
+  },
 }

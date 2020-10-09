@@ -27,9 +27,6 @@ export default {
       console.log('1111', clientmsg)
       let res = await us.login(clientmsg)
       const { code, token, userName, msg } = res.data
-      // console.log(portrait)
-      console.log('data', res.data)
-      console.log('xxxxxx', userName)
       if (code) {
         commit('setUserMsg', res.data)
         sessionStorage.setItem('loginUserId', parseInt(clientmsg.form.userid))
@@ -49,7 +46,6 @@ export default {
     async register({ commit }, clitenmsg) {
       // console.log(commit)
       let res = await us.register(clitenmsg)
-      console.log('res', res)
       let { code, registerid } = res.data
       commit('setRegisertId', registerid)
       return code
